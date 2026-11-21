@@ -1,0 +1,66 @@
+# Keputusan Teknis
+
+Dokumen ini menjelaskan keputusan utama yang dipakai dalam implementasi.
+
+## 1. Yii2 sebagai backend utama
+
+Yii2 dipakai untuk semua business logic inti karena requirement meminta Yii dan framework ini sudah menyediakan Active Record, migration, validasi model, dan autentikasi.
+
+Keputusan ini membuat aturan penting seperti antrean, stok, billing, dan pembayaran tetap berada dalam satu service yang konsisten.
+
+## 2. Node.js hanya untuk service pendukung
+
+Node dipakai untuk laboratorium dan dashboard karena requirement meminta backend service terpisah. Node tidak mengambil alih business logic Yii.
+
+Pembagian ini dipilih supaya:
+
+- business logic tidak terduplikasi,
+- billing tetap konsisten,
+- perubahan data inti tetap lewat Yii,
+- Node tetap berguna sebagai API pendukung.
+
+## 3. Satu database PostgreSQL
+
+Satu database dipakai supaya alur tetap sederhana dan konsisten. Node mendapat akses terbatas sesuai kebutuhan service-nya.
+
+Untuk production yang lebih besar, pendekatan bisa dipisah per service, tetapi untuk aplikasi ini satu database lebih mudah divalidasi dan dijelaskan.
+
+## 4. Harga disimpan sebagai snapshot
+
+Tarif tindakan, biaya lab, dan harga obat disalin ke `invoice_items` saat item tagihan dibuat.
+
+Alasannya: perubahan master tarif tidak mengubah tagihan lama yang sudah dibuat.
+
+## 5. Antrean dibuat dalam transaction
+
+Nomor antrean diambil per poli dan tanggal dalam transaction. Constraint unik dipakai supaya dua request bersamaan tidak menghasilkan nomor yang sama.
+
+## 6. Stok dikurangi dengan conditional update
+
+Penyerahan obat memakai pola:
+
+```sql
+UPDATE medicines
+SET stock = stock - :qty
+WHERE id = :id AND stock >= :qty
+```
+
+Kalau tidak ada row yang berubah, transaksi dibatalkan. Ini mencegah stok menjadi minus saat dua transaksi berjalan bersamaan.
+
+## 7. Pembayaran memakai idempotency key
+
+Client mengirim `idempotency_key` saat membuat pembayaran. Database memberi unique constraint pada key tersebut.
+
+Kalau request diulang karena jaringan putus, sistem mengembalikan pembayaran yang sudah ada, bukan mencatat transaksi baru.
+
+## 8. Perubahan setelah billing dicatat di audit log
+
+Kalau diagnosis atau tindakan berubah setelah invoice dibuat:
+
+- invoice belum lunas boleh dihitung ulang,
+- invoice sudah lunas memakai adjustment,
+- semua perubahan penting dicatat di `audit_logs`.
+
+## 9. UI dibuat fungsional
+
+Fokus utama adalah alur kerja yang jelas. UI dibuat rapi dan sederhana, bukan desain kompleks, supaya waktu lebih banyak dipakai untuk correctness dan transaction safety.
