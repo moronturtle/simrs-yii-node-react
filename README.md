@@ -21,7 +21,7 @@ Aplikasi SIMRS rawat jalan untuk mengelola alur pendaftaran pasien sampai pembay
 
 ## Kebutuhan
 
-- PHP 8.1+
+- PHP 8.4+
 - Composer
 - Node.js 20+
 - PostgreSQL 15+
@@ -29,25 +29,20 @@ Aplikasi SIMRS rawat jalan untuk mengelola alur pendaftaran pasien sampai pembay
 
 ## Menjalankan aplikasi
 
-Perintah final akan disesuaikan setelah skeleton aplikasi dibuat.
-
 ```bash
-# backend Yii2
-cd backend-yii
-composer install
-php yii migrate/up
-php yii serve --port=8080
-
-# service Node.js
-cd services-node
-npm install
-npm run dev
-
-# frontend React
-cd web
-npm install
-npm run dev
+cp .env.example .env
+docker compose up -d db
+docker compose up -d --build
+docker compose exec yii php yii migrate/up --interactive=0
 ```
+
+Kalau menjalankan Docker Desktop dari WSL tanpa integrasi WSL, gunakan `docker.exe compose` sebagai pengganti `docker compose`.
+
+Setelah service aktif:
+
+- Yii API: `http://localhost:8080/api/ping`
+- Node API: `http://localhost:3000/api/health`
+- React web: `http://localhost:5173`
 
 ## Dokumentasi
 

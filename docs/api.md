@@ -27,6 +27,12 @@ Jika gagal:
 
 ## Yii API
 
+### Health
+
+| Method | Endpoint | Fungsi |
+|--------|----------|--------|
+| GET | `/api/ping` | Cek service Yii. |
+
 ### Auth
 
 | Method | Endpoint | Fungsi |
@@ -69,6 +75,12 @@ Jika gagal:
 | GET | `/api/payments/{id}/receipt` | Bukti pembayaran. |
 
 ## Node API
+
+### Health
+
+| Method | Endpoint | Fungsi |
+|--------|----------|--------|
+| GET | `/api/health` | Cek service Node dan koneksi database. |
 
 ### Laboratorium
 

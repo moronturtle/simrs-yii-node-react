@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: simrs-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-simrs}
+      POSTGRES_USER: ${POSTGRES_USER:-simrs}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-simrs_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-simrs} -d $${POSTGRES_DB:-simrs}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  yii:
+    build:
+      context: ./backend-yii
+    container_name: simrs-yii
+    env_file: .env
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend-yii:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  node:
+    build:
+      context: ./services-node
+    container_name: simrs-node
+    env_file: .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./services-node:/app
+      - node-modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    command: npm run dev
+
+  web:
+    build:
+      context: ./web
+    container_name: simrs-web
+    env_file: .env
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web:/app
+      - web-modules:/app/node_modules
+    depends_on:
+      - yii
+      - node
+    command: npm run dev -- --host 0.0.0.0
+
+volumes:
+  postgres-data:
+  node-modules:
+  web-modules:
