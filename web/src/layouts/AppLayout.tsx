@@ -18,6 +18,7 @@ export function AppLayout() {
 
       <nav className="nav">
         <NavLink to="/">Dashboard</NavLink>
+        {hasRole(['ADMIN', 'PENDAFTARAN']) && <NavLink to="/master">Master Data</NavLink>}
         {hasRole(['ADMIN']) && <NavLink to="/admin">Area Admin</NavLink>}
       </nav>
 

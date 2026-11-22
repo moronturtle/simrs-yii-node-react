@@ -78,17 +78,48 @@ Authorization: Bearer <token>
 
 ### Master data
 
+Semua endpoint master data memakai Bearer token. Semua role bisa membaca data, tetapi hak tulis dibatasi:
+
+- `patients`: `ADMIN`, `PENDAFTARAN`
+- `doctors`, `polis`, `schedules`, `actions`, `medicines`: `ADMIN`
+
+`GET` list mendukung query:
+
+- `q` untuk pencarian,
+- `page` untuk halaman,
+- `per-page` untuk jumlah data.
+
+Response list:
+
+```json
+{
+  "success": true,
+  "data": {
+    "items": [],
+    "pagination": {
+      "page": 1,
+      "page_size": 20,
+      "total": 0
+    }
+  },
+  "error": null
+}
+```
+
 | Method | Endpoint | Fungsi |
 |--------|----------|--------|
 | GET/POST | `/api/patients` | List dan tambah pasien. |
-| GET/PUT/DELETE | `/api/patients/{id}` | Detail, ubah, hapus pasien. |
+| GET/PUT/PATCH/DELETE | `/api/patients/{id}` | Detail, ubah, hapus pasien. |
 | GET/POST | `/api/doctors` | List dan tambah dokter. |
-| GET/PUT/DELETE | `/api/doctors/{id}` | Detail, ubah, hapus dokter. |
+| GET/PUT/PATCH/DELETE | `/api/doctors/{id}` | Detail, ubah, hapus dokter. |
 | GET/POST | `/api/polis` | List dan tambah poli. |
-| GET/PUT/DELETE | `/api/polis/{id}` | Detail, ubah, hapus poli. |
+| GET/PUT/PATCH/DELETE | `/api/polis/{id}` | Detail, ubah, hapus poli. |
 | GET/POST | `/api/schedules` | List dan tambah jadwal dokter. |
+| GET/PUT/PATCH/DELETE | `/api/schedules/{id}` | Detail, ubah, hapus jadwal. |
 | GET/POST | `/api/actions` | List dan tambah tindakan medis. |
+| GET/PUT/PATCH/DELETE | `/api/actions/{id}` | Detail, ubah, hapus tindakan. |
 | GET/POST | `/api/medicines` | List dan tambah obat. |
+| GET/PUT/PATCH/DELETE | `/api/medicines/{id}` | Detail, ubah, hapus obat. |
 
 ### Rawat jalan
 

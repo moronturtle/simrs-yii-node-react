@@ -10,6 +10,8 @@ use yii\base\ActionFilter;
 class RoleAccessFilter extends ActionFilter
 {
     public array $roles = [];
+    public array $readRoles = [];
+    public array $writeRoles = [];
 
     public function beforeAction($action): bool
     {
@@ -25,7 +27,9 @@ class RoleAccessFilter extends ActionFilter
             return false;
         }
 
-        if ($this->roles !== [] && !in_array($user->identity->role, $this->roles, true)) {
+        $requiredRoles = $this->requiredRoles();
+
+        if ($requiredRoles !== [] && !in_array($user->identity->role, $requiredRoles, true)) {
             Yii::$app->response->statusCode = 403;
             Yii::$app->response->data = [
                 'success' => false,
@@ -36,5 +40,18 @@ class RoleAccessFilter extends ActionFilter
         }
 
         return parent::beforeAction($action);
+    }
+
+    private function requiredRoles(): array
+    {
+        if ($this->roles !== []) {
+            return $this->roles;
+        }
+
+        $request = Yii::$app->request;
+
+        return ($request->isGet || $request->isHead || $request->isOptions)
+            ? $this->readRoles
+            : $this->writeRoles;
     }
 }

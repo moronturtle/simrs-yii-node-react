@@ -54,3 +54,20 @@ erDiagram
 - `payments.idempotency_key` harus unik untuk mencegah pembayaran ganda.
 - `medicines.stock` memakai `CHECK (stock >= 0)`.
 - Index dibuat pada kolom yang sering dipakai filter: tanggal, status, `patient_id`, `visit_id`.
+
+## Strategi index
+
+- Kolom unik seperti `medical_record_no`, `visit_number`, `invoice_number`, dan `idempotency_key` otomatis punya unique index.
+- Kolom nama master data memakai trigram index `pg_trgm` supaya pencarian `ILIKE '%keyword%'` tetap efisien.
+- Kolom foreign key dan kombinasi filter utama diberi index, misalnya `patient_id + visit_date`, `doctor_id + visit_date`, `status + visit_date`, dan `poli_id + day_of_week`.
+- Index ditambah lewat migration supaya schema tetap reproducible.
+
+## Referensi SQL
+
+File [schema.sql](schema.sql) berisi versi SQL yang lebih mudah dibaca untuk belajar struktur tabel, constraint, dan index. File itu adalah referensi; kalau ada perbedaan, yang benar adalah migration di `backend-yii/migrations`.
+
+## ORM dan raw query
+
+- CRUD normal memakai Yii `ActiveRecord` dan `ActiveQuery` supaya validasi, relasi, dan struktur kode tetap rapi.
+- Raw query dipakai hanya untuk kasus yang memang lebih tepat di database, misalnya conditional update stok, counter antrean, aggregate dashboard, atau locking.
+- Pola ini membuat business logic tetap jelas tanpa kehilangan kontrol untuk bagian yang butuh transaction safety.

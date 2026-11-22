@@ -44,8 +44,8 @@ Kalau menjalankan Docker Desktop dari WSL tanpa integrasi WSL, gunakan `docker.e
 
 Setelah service aktif:
 
-- Yii API: `http://localhost:8080/api/ping`
-- Node API: `http://localhost:3000/api/health`
+- Yii API: `http://localhost:8081/api/ping`
+- Node API: `http://localhost:3001/api/health`
 - React web: `http://localhost:5173`
 
 Akun seed untuk development memakai password `password123`:
@@ -67,5 +67,6 @@ docker compose stop
 
 - [Arsitektur aplikasi](docs/arsitektur.md)
 - [Skema database dan relasi](docs/database.md)
+- [Referensi schema SQL](docs/schema.sql)
 - [Daftar endpoint API](docs/api.md)
 - [Keputusan teknis](docs/keputusan-teknis.md)

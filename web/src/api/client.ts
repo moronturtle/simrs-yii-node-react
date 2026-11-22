@@ -43,6 +43,13 @@ export const yiiApi = {
       method: 'POST',
       body: JSON.stringify(body),
     }, token),
+  put: <T,>(path: string, body: unknown, token?: string) =>
+    request<T>('/api-yii', path, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    }, token),
+  delete: <T,>(path: string, token?: string) =>
+    request<T>('/api-yii', path, { method: 'DELETE' }, token),
 }
 
 export const nodeApi = {

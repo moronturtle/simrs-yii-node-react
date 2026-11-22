@@ -50,14 +50,19 @@ class BaseApiController extends Controller
         ];
     }
 
-    protected function failure(string $code, string $message, int $status): array
+    protected function failure(string $code, string $message, int $status, array $details = []): array
     {
         Yii::$app->response->statusCode = $status;
+        $error = compact('code', 'message');
+
+        if ($details !== []) {
+            $error['details'] = $details;
+        }
 
         return [
             'success' => false,
             'data' => null,
-            'error' => compact('code', 'message'),
+            'error' => $error,
         ];
     }
 }
