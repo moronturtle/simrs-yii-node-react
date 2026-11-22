@@ -5,6 +5,7 @@ import { AdminPage } from './pages/AdminPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { MasterDataPage } from './pages/MasterDataPage'
+import { VisitDetailPage } from './pages/VisitDetailPage'
 import { VisitsPage } from './pages/VisitsPage'
 import './App.css'
 
@@ -28,6 +29,7 @@ export default function App() {
       <Route element={<ProtectedRoute roles={['ADMIN', 'PENDAFTARAN', 'DOKTER']} />}>
         <Route element={<AppLayout />}>
           <Route path="/visits" element={<VisitsPage />} />
+          <Route path="/visits/:id" element={<VisitDetailPage />} />
         </Route>
       </Route>
 

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { listResource, type MasterRow } from '../api/masterData'
 import {
   createVisit,
@@ -160,7 +161,7 @@ export function VisitsPage() {
           <tbody>
             {visits.map((visit) => (
               <tr key={visit.id}>
-                <td>{visit.visit_number}</td>
+                <td><Link to={`/visits/${visit.id}`}>{visit.visit_number}</Link></td>
                 <td><strong>{visit.queue_number}</strong></td>
                 <td>
                   {nameOf(visit.patient)}

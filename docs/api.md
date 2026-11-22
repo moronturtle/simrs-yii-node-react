@@ -131,7 +131,9 @@ Response list:
 | POST | `/api/visits` | `ADMIN`, `PENDAFTARAN` | Membuat kunjungan dan nomor antrean. |
 | GET | `/api/visits/{id}` | Semua role login | Detail kunjungan. |
 | PATCH | `/api/visits/{id}/status` | `ADMIN`, `PENDAFTARAN`, `DOKTER` | Mengubah status antrean. |
+| GET | `/api/visits/{id}/examination` | Semua role login | Detail pemeriksaan. |
 | POST | `/api/visits/{id}/examination` | `DOKTER` | Simpan pemeriksaan. |
+| GET | `/api/visits/{id}/actions` | Semua role login | Daftar tindakan kunjungan. |
 | POST | `/api/visits/{id}/actions` | `DOKTER` | Tambah tindakan medis. |
 | POST | `/api/visits/{id}/prescriptions` | `DOKTER` | Buat resep. |
 | POST | `/api/prescriptions/{id}/dispense` | `FARMASI` | Serahkan obat dan kurangi stok. |
@@ -147,6 +149,34 @@ Contoh body create visit:
 ```
 
 `doctor_id` dan `poli_id` diambil dari `schedule_id` agar tidak terjadi mismatch jadwal. Nomor antrean dibuat di dalam transaction memakai counter per poli dan tanggal.
+
+Contoh body pemeriksaan:
+
+```json
+{
+  "anamnesis": "Demam sejak 2 hari",
+  "vital_signs": {
+    "temperature": 38.2,
+    "blood_pressure": "120/80",
+    "pulse": 88
+  },
+  "physical_exam": "Faring hiperemis",
+  "primary_diagnosis": "ISPA",
+  "secondary_diagnosis": "Observasi anemia"
+}
+```
+
+Contoh body tindakan:
+
+```json
+{
+  "medical_action_id": 1,
+  "quantity": 1,
+  "notes": "Konsultasi awal"
+}
+```
+
+Saat tindakan dibuat, `visit_actions.price` dan `invoice_items.unit_price` menyimpan snapshot tarif saat itu. Perubahan harga master tindakan tidak mengubah tagihan lama.
 
 ### Billing
 

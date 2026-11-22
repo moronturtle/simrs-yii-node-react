@@ -267,3 +267,15 @@ th {
   background: #fee2e2;
   color: #b91c1c;
 }
+
+.visit-summary {
+  margin-top: 20px;
+}
+
+.visit-summary p {
+  margin: 6px 0;
+}
+
+.section-title {
+  margin-top: 28px;
+}

@@ -42,6 +42,10 @@ export function listVisits(
   return yiiApi.get<VisitListResult>(`/visits?${query}`, token)
 }
 
+export function getVisit(token: string, id: number) {
+  return yiiApi.get<Visit>(`/visits/${id}`, token)
+}
+
 export function createVisit(
   token: string,
   body: { patient_id: number; schedule_id: number; chief_complaint?: string },
