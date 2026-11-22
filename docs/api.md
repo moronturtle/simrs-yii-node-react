@@ -135,6 +135,8 @@ Response list:
 | POST | `/api/visits/{id}/examination` | `DOKTER` | Simpan pemeriksaan. |
 | GET | `/api/visits/{id}/actions` | Semua role login | Daftar tindakan kunjungan. |
 | POST | `/api/visits/{id}/actions` | `DOKTER` | Tambah tindakan medis. |
+| GET | `/api/visits/{id}/lab-orders` | Semua role login | Daftar order lab pada kunjungan. |
+| POST | `/api/visits/{id}/lab-orders` | `DOKTER` | Buat order lab dan item tagihan `LAB`. |
 | GET | `/api/prescriptions` | Semua role login | Daftar resep; filter `visit_id` dan `status`. |
 | GET | `/api/prescriptions/{id}` | Semua role login | Detail resep dan item obat. |
 | POST | `/api/visits/{id}/prescriptions` | `DOKTER` | Buat resep. |
@@ -180,6 +182,17 @@ Contoh body tindakan:
 
 Saat tindakan dibuat, `visit_actions.price` dan `invoice_items.unit_price` menyimpan snapshot tarif saat itu. Perubahan harga master tindakan tidak mengubah tagihan lama.
 
+Contoh body order lab:
+
+```json
+{
+  "test_name": "Darah Lengkap",
+  "price": 75000
+}
+```
+
+Order lab hanya bisa dibuat saat kunjungan berstatus `IN_EXAM` atau `LAB`. Yii menyimpan order sebagai `REQUESTED`, mengubah visit menjadi `LAB`, dan menambah item invoice `LAB` dengan snapshot biaya.
+
 Contoh body resep:
 
 ```json
@@ -218,12 +231,14 @@ Saat dispense, stok obat dikurangi di dalam transaction memakai conditional upda
 
 ### Laboratorium
 
-| Method | Endpoint | Fungsi |
-|--------|----------|--------|
-| POST | `/api/lab/orders` | Buat permintaan lab dari Yii. |
-| GET | `/api/lab/orders` | Daftar permintaan lab. |
-| GET | `/api/lab/orders/{id}` | Detail permintaan. |
-| PUT | `/api/lab/orders/{id}/result` | Input hasil lab. |
+| Method | Endpoint | Role tulis | Fungsi |
+|--------|----------|------------|--------|
+| GET | `/api/lab/orders` | Semua role login | Daftar order lab; filter `status` dan `visit_id`. |
+| GET | `/api/lab/orders/{id}` | Semua role login | Detail order dan hasil lab. |
+| PATCH | `/api/lab/orders/{id}/start` | `LAB` | Ubah `REQUESTED` menjadi `IN_PROGRESS`. |
+| PUT | `/api/lab/orders/{id}/result` | `LAB` | Input atau update hasil lab, lalu status menjadi `COMPLETED`. |
+
+`PUT /result` memakai upsert berdasarkan `lab_order_id`, sehingga retry setelah timeout tidak membuat row hasil ganda. Kalau Node sedang tidak tersedia, UI menampilkan error dan petugas bisa mengulang aksi secara manual.
 
 ### Dashboard
 

@@ -241,7 +241,8 @@ th {
   padding: 4px 10px;
 }
 
-.status-registered {
+.status-registered,
+.status-requested {
   background: #dbeafe;
   color: #1d4ed8;
 }
@@ -249,7 +250,8 @@ th {
 .status-in_exam,
 .status-lab,
 .status-pharmacy,
-.status-prescribed {
+.status-prescribed,
+.status-in_progress {
   background: #fef3c7;
   color: #92400e;
 }
@@ -260,12 +262,14 @@ th {
 }
 
 .status-paid,
-.status-dispensed {
+.status-dispensed,
+.status-completed {
   background: #dcfce7;
   color: #166534;
 }
 
-.status-cancelled {
+.status-cancelled,
+.status-failed {
   background: #fee2e2;
   color: #b91c1c;
 }

@@ -3,6 +3,7 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { AppLayout } from './layouts/AppLayout'
 import { AdminPage } from './pages/AdminPage'
 import { DashboardPage } from './pages/DashboardPage'
+import { LabPage } from './pages/LabPage'
 import { LoginPage } from './pages/LoginPage'
 import { MasterDataPage } from './pages/MasterDataPage'
 import { PharmacyPage } from './pages/PharmacyPage'
@@ -37,6 +38,12 @@ export default function App() {
       <Route element={<ProtectedRoute roles={['ADMIN', 'FARMASI']} />}>
         <Route element={<AppLayout />}>
           <Route path="/pharmacy" element={<PharmacyPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={['ADMIN', 'LAB']} />}>
+        <Route element={<AppLayout />}>
+          <Route path="/lab" element={<LabPage />} />
         </Route>
       </Route>
 

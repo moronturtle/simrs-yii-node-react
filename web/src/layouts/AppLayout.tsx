@@ -21,6 +21,7 @@ export function AppLayout() {
         {hasRole(['ADMIN', 'PENDAFTARAN']) && <NavLink to="/master">Master Data</NavLink>}
         {hasRole(['ADMIN', 'PENDAFTARAN', 'DOKTER']) && <NavLink to="/visits">Antrean</NavLink>}
         {hasRole(['ADMIN', 'FARMASI']) && <NavLink to="/pharmacy">Farmasi</NavLink>}
+        {hasRole(['ADMIN', 'LAB']) && <NavLink to="/lab">Laboratorium</NavLink>}
         {hasRole(['ADMIN']) && <NavLink to="/admin">Area Admin</NavLink>}
       </nav>
 

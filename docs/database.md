@@ -52,6 +52,7 @@ erDiagram
 - `visits` mencegah kunjungan aktif ganda untuk pasien yang sama lewat partial unique index.
 - `queue_counters` menyimpan counter antrean per `poli_id + queue_date`; update counter dilakukan atomik dengan `INSERT ... ON CONFLICT ... RETURNING`.
 - `prescription_items.price` menyimpan snapshot harga obat saat resep dibuat.
+- `lab_results.lab_order_id` unik supaya satu order hanya punya satu hasil; retry input hasil memakai upsert.
 - `invoice_items` menyimpan nama layanan dan harga sebagai snapshot.
 - `payments.idempotency_key` harus unik untuk mencegah pembayaran ganda.
 - `medicines.stock` memakai `CHECK (stock >= 0)` dan penurunan stok memakai conditional update `stock >= quantity` di transaction.

@@ -19,6 +19,8 @@ Pembagian ini dipilih supaya:
 - perubahan data inti tetap lewat Yii,
 - Node tetap berguna sebagai API pendukung.
 
+Untuk lab, Yii membuat `lab_orders`, item invoice `LAB`, dan status kunjungan. Node kemudian mengelola workflow `REQUESTED → IN_PROGRESS → COMPLETED` dan menyimpan `lab_results`. Input hasil memakai upsert pada `lab_order_id` supaya retry setelah timeout tidak membuat hasil ganda.
+
 ## 3. Satu database PostgreSQL
 
 Satu database dipakai supaya alur tetap sederhana dan konsisten. Node mendapat akses terbatas sesuai kebutuhan service-nya.

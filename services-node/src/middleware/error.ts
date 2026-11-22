@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from 'express'
+import { HttpError } from '../http.js'
 
 export function notFound(_req: Request, res: Response) {
   res.status(404).json({
@@ -14,9 +15,17 @@ export function errorHandler(
   res: Response,
   _next: NextFunction,
 ) {
+  if (error instanceof HttpError) {
+    return res.status(error.status).json({
+      success: false,
+      data: null,
+      error: { code: error.code, message: error.message },
+    })
+  }
+
   console.error(error)
 
-  res.status(500).json({
+  return res.status(500).json({
     success: false,
     data: null,
     error: { code: 'INTERNAL_ERROR', message: 'Terjadi kesalahan pada service' },

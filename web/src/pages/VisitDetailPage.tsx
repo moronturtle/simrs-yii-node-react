@@ -8,6 +8,11 @@ import {
   type Examination,
   type VisitAction,
 } from '../api/clinical'
+import {
+  createLabOrder,
+  listLabOrders,
+  type LabOrder,
+} from '../api/lab'
 import { listResource, type MasterRow } from '../api/masterData'
 import {
   createPrescription,
@@ -17,6 +22,8 @@ import {
 import { getVisit, type Visit } from '../api/visits'
 import { useAuth } from '../auth/useAuth'
 import { ExaminationForm } from '../components/ExaminationForm'
+import { LabOrderForm } from '../components/LabOrderForm'
+import { LabOrderTable } from '../components/LabOrderTable'
 import { PrescriptionForm } from '../components/PrescriptionForm'
 import { VisitActionForm } from '../components/VisitActionForm'
 
@@ -28,6 +35,8 @@ export function VisitDetailPage() {
   const [examination, setExamination] = useState<Examination | null>(null)
   const [visitActions, setVisitActions] = useState<VisitAction[]>([])
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
+  const [labOrders, setLabOrders] = useState<LabOrder[]>([])
+  const [labError, setLabError] = useState('')
   const [actions, setActions] = useState<MasterRow[]>([])
   const [medicines, setMedicines] = useState<MasterRow[]>([])
   const [loading, setLoading] = useState(true)
@@ -39,6 +48,7 @@ export function VisitDetailPage() {
 
     setLoading(true)
     setError('')
+    setLabError('')
 
     try {
       const [visitResult, actionResult, masterActions, masterMedicines, prescriptionResult] = await Promise.all([
@@ -59,6 +69,13 @@ export function VisitDetailPage() {
         setExamination(await getExamination(token, visitId))
       } catch {
         setExamination(null)
+      }
+
+      try {
+        setLabOrders((await listLabOrders(token, { visit_id: String(visitId) })).items)
+      } catch {
+        setLabOrders([])
+        setLabError('Service laboratorium tidak tersedia')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Gagal memuat kunjungan')
@@ -90,6 +107,17 @@ export function VisitDetailPage() {
       await loadData()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Gagal menambah tindakan')
+    }
+  }
+
+  async function handleLabOrder(body: { test_name: string; price: number }) {
+    if (!token) return
+
+    try {
+      await createLabOrder(token, visitId, body)
+      await loadData()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal mengirim order lab')
     }
   }
 
@@ -132,6 +160,7 @@ export function VisitDetailPage() {
         <>
           <ExaminationForm initial={examination} onSubmit={handleExamination} />
           <VisitActionForm actions={actions} onSubmit={handleAction} />
+          <LabOrderForm onSubmit={handleLabOrder} />
           <PrescriptionForm medicines={medicines} onSubmit={handlePrescription} />
         </>
       ) : examination && (
@@ -169,6 +198,10 @@ export function VisitDetailPage() {
           </tbody>
         </table>
       </div>
+
+      <h2 className="section-title">Laboratorium</h2>
+      {labError && <p className="error">{labError}</p>}
+      <LabOrderTable orders={labOrders} />
 
       <h2 className="section-title">Resep</h2>
       <div className="table-wrap">

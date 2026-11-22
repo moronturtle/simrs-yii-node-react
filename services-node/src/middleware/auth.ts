@@ -17,6 +17,20 @@ declare global {
   }
 }
 
+export function roleRequired(roles: string[]) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user || !roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        data: null,
+        error: { code: 'FORBIDDEN', message: 'Role tidak punya akses' },
+      })
+    }
+
+    return next()
+  }
+}
+
 export function authRequired(req: Request, res: Response, next: NextFunction) {
   const header = req.headers.authorization
 

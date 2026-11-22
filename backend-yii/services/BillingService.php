@@ -6,6 +6,7 @@ namespace app\services;
 
 use app\models\Invoice;
 use app\models\InvoiceItem;
+use app\models\LabOrder;
 use app\models\MedicalAction;
 use app\models\Prescription;
 use app\models\Visit;
@@ -50,6 +51,24 @@ class BillingService
             "Tindakan: {$action->name}",
             $visitAction->quantity,
             $visitAction->price,
+        );
+
+        $this->recalculate($invoice);
+        return $invoice;
+    }
+
+    public function addLabItem(Visit $visit, LabOrder $order): Invoice
+    {
+        $invoice = $this->ensureInvoice($visit);
+        $this->assertEditable($invoice);
+
+        $this->addItem(
+            $invoice,
+            'LAB',
+            $order->id,
+            "Lab: {$order->test_name}",
+            1,
+            (float) $order->price,
         );
 
         $this->recalculate($invoice);

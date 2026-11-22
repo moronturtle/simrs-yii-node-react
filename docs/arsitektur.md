@@ -18,7 +18,6 @@ flowchart LR
     user[Petugas / Dokter / Farmasi / Lab / Kasir] --> web[React Web]
     web -->|login dan API inti| yii[Yii2 REST API]
     web -->|lab dan dashboard API| node[Node.js Service]
-    yii -->|validasi order lab| node
     yii --> db[(PostgreSQL)]
     node --> db
 ```
@@ -40,9 +39,9 @@ flowchart LR
 3. Dokter membuka antrean dan mengisi pemeriksaan lewat Yii.
 4. Tindakan yang dipilih disimpan sebagai item tagihan dengan snapshot tarif.
 5. Resep dibuat lewat Yii. Saat obat diserahkan, Yii mengurangi stok dalam transaction.
-6. Permintaan lab dibuat lewat Yii, lalu Yii meneruskan order ke service Node.
-7. Petugas lab menginput hasil lewat Node.
-8. Yii mengambil status/hasil lab untuk ditampilkan pada riwayat kunjungan.
+6. Permintaan lab dibuat lewat Yii sekaligus dengan item tagihan `LAB`.
+7. Node membaca order lab yang sama, lalu petugas lab memproses status dan menginput hasil lewat Node.
+8. Dokter membaca status/hasil lab dari endpoint Node pada detail kunjungan.
 9. Yii menggabungkan biaya pendaftaran, tindakan, lab, dan obat ke invoice.
 10. Kasir mencatat pembayaran lewat Yii dengan idempotency key.
 
