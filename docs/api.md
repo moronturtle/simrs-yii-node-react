@@ -215,11 +215,27 @@ Saat dispense, stok obat dikurangi di dalam transaction memakai conditional upda
 
 ### Billing
 
-| Method | Endpoint | Fungsi |
-|--------|----------|--------|
-| GET | `/api/visits/{id}/invoice` | Ambil invoice kunjungan. |
-| POST | `/api/invoices/{id}/payments` | Catat pembayaran. |
-| GET | `/api/payments/{id}/receipt` | Bukti pembayaran. |
+`GET /api/invoices` mendukung query `q`, `status`, `page`, dan `per-page`.
+
+| Method | Endpoint | Role tulis | Fungsi |
+|--------|----------|------------|--------|
+| GET | `/api/invoices` | Semua role login | Daftar invoice. |
+| GET | `/api/invoices/{id}` | Semua role login | Detail invoice, item biaya, dan pembayaran. |
+| GET | `/api/visits/{id}/invoice` | Semua role login | Ambil invoice dari kunjungan. |
+| POST | `/api/invoices/{id}/payments` | `KASIR` | Catat pembayaran. |
+| GET | `/api/payments/{id}/receipt` | Semua role login | Bukti pembayaran. |
+
+Contoh body pembayaran:
+
+```json
+{
+  "amount": 50000,
+  "method": "CASH",
+  "idempotency_key": "pay-visit-5-001"
+}
+```
+
+`method` hanya menerima `CASH` atau `NON_CASH`. Nominal tidak boleh melebihi sisa tagihan. Kalau `idempotency_key` dikirim ulang, API mengembalikan payment yang sama dengan HTTP `200`, bukan membuat row baru. Invoice berubah `UNPAID → PARTIAL → PAID`; saat lunas, status kunjungan ikut menjadi `PAID`.
 
 ## Node API
 

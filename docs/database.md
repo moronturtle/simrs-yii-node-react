@@ -55,6 +55,7 @@ erDiagram
 - `lab_results.lab_order_id` unik supaya satu order hanya punya satu hasil; retry input hasil memakai upsert.
 - `invoice_items` menyimpan nama layanan dan harga sebagai snapshot.
 - `payments.idempotency_key` harus unik untuk mencegah pembayaran ganda.
+- Pembayaran mengunci row invoice `FOR UPDATE` supaya dua request bersamaan tidak melebihi `total_amount`.
 - `medicines.stock` memakai `CHECK (stock >= 0)` dan penurunan stok memakai conditional update `stock >= quantity` di transaction.
 - Index dibuat pada kolom yang sering dipakai filter: tanggal, status, `patient_id`, `visit_id`.
 

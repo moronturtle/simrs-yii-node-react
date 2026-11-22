@@ -268,6 +268,16 @@ th {
   color: #166534;
 }
 
+.status-unpaid {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-partial {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 .status-cancelled,
 .status-failed {
   background: #fee2e2;
@@ -299,4 +309,30 @@ th {
   border-top: 0;
   margin-top: 0;
   padding-top: 0;
+}
+
+.billing-layout {
+  align-items: start;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(360px, 1fr) minmax(480px, 1.2fr);
+}
+
+.billing-layout tbody tr {
+  cursor: pointer;
+}
+
+.billing-layout .selected-row {
+  background: #eff6ff;
+}
+
+.receipt {
+  border-left: 4px solid #2563eb;
+  margin-top: 24px;
+}
+
+@media (max-width: 900px) {
+  .billing-layout {
+    grid-template-columns: 1fr;
+  }
 }

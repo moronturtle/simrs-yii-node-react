@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AppLayout } from './layouts/AppLayout'
 import { AdminPage } from './pages/AdminPage'
+import { BillingPage } from './pages/BillingPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LabPage } from './pages/LabPage'
 import { LoginPage } from './pages/LoginPage'
@@ -44,6 +45,12 @@ export default function App() {
       <Route element={<ProtectedRoute roles={['ADMIN', 'LAB']} />}>
         <Route element={<AppLayout />}>
           <Route path="/lab" element={<LabPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={['ADMIN', 'KASIR']} />}>
+        <Route element={<AppLayout />}>
+          <Route path="/billing" element={<BillingPage />} />
         </Route>
       </Route>
 

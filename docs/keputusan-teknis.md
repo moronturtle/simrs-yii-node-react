@@ -57,7 +57,7 @@ Resep dibuat oleh `DOKTER` setelah pemeriksaan dimulai, lalu `FARMASI` melakukan
 
 Client mengirim `idempotency_key` saat membuat pembayaran. Database memberi unique constraint pada key tersebut.
 
-Kalau request diulang karena jaringan putus, sistem mengembalikan pembayaran yang sudah ada, bukan mencatat transaksi baru.
+Kalau request diulang karena jaringan putus, sistem mengembalikan pembayaran yang sudah ada, bukan mencatat transaksi baru. Di dalam transaction, row invoice dikunci `FOR UPDATE`, nominal dicek terhadap sisa tagihan, `paid_amount` ditambah, status invoice dihitung ulang, dan visit berubah `PAID` saat lunas.
 
 ## 8. Perubahan setelah billing dicatat di audit log
 
