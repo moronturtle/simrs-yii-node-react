@@ -33,7 +33,9 @@ Alasannya: perubahan master tarif tidak mengubah tagihan lama yang sudah dibuat.
 
 ## 5. Antrean dibuat dalam transaction
 
-Nomor antrean diambil per poli dan tanggal dalam transaction. Constraint unik dipakai supaya dua request bersamaan tidak menghasilkan nomor yang sama.
+Nomor antrean diambil per poli dan tanggal dalam transaction memakai `INSERT ... ON CONFLICT ... DO UPDATE ... RETURNING` pada `queue_counters`. Pendekatan ini atomik dan tidak perlu membaca counter lalu menulisnya sebagai dua query terpisah.
+
+Constraint unik `poli_id + visit_date + queue_number` tetap dipakai sebagai pengaman terakhir. Partial unique index pada `visits.patient_id` juga mencegah pasien punya dua kunjungan aktif.
 
 ## 6. Stok dikurangi dengan conditional update
 

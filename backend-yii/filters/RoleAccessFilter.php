@@ -12,6 +12,7 @@ class RoleAccessFilter extends ActionFilter
     public array $roles = [];
     public array $readRoles = [];
     public array $writeRoles = [];
+    public array $actionRoles = [];
 
     public function beforeAction($action): bool
     {
@@ -27,7 +28,7 @@ class RoleAccessFilter extends ActionFilter
             return false;
         }
 
-        $requiredRoles = $this->requiredRoles();
+        $requiredRoles = $this->requiredRoles($action->id);
 
         if ($requiredRoles !== [] && !in_array($user->identity->role, $requiredRoles, true)) {
             Yii::$app->response->statusCode = 403;
@@ -42,8 +43,12 @@ class RoleAccessFilter extends ActionFilter
         return parent::beforeAction($action);
     }
 
-    private function requiredRoles(): array
+    private function requiredRoles(string $actionId): array
     {
+        if (isset($this->actionRoles[$actionId])) {
+            return $this->actionRoles[$actionId];
+        }
+
         if ($this->roles !== []) {
             return $this->roles;
         }

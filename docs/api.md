@@ -123,15 +123,30 @@ Response list:
 
 ### Rawat jalan
 
-| Method | Endpoint | Fungsi |
-|--------|----------|--------|
-| GET | `/api/visits` | Daftar kunjungan/antrean. |
-| POST | `/api/visits` | Membuat kunjungan dan nomor antrean. |
-| GET | `/api/visits/{id}` | Detail kunjungan. |
-| POST | `/api/visits/{id}/examination` | Simpan pemeriksaan. |
-| POST | `/api/visits/{id}/actions` | Tambah tindakan medis. |
-| POST | `/api/visits/{id}/prescriptions` | Buat resep. |
-| POST | `/api/prescriptions/{id}/dispense` | Serahkan obat dan kurangi stok. |
+`GET /api/visits` mendukung query `q`, `status`, `visit_date`, `patient_id`, `poli_id`, `doctor_id`, `page`, dan `per-page`.
+
+| Method | Endpoint | Role tulis | Fungsi |
+|--------|----------|------------|--------|
+| GET | `/api/visits` | Semua role login | Daftar kunjungan/antrean. |
+| POST | `/api/visits` | `ADMIN`, `PENDAFTARAN` | Membuat kunjungan dan nomor antrean. |
+| GET | `/api/visits/{id}` | Semua role login | Detail kunjungan. |
+| PATCH | `/api/visits/{id}/status` | `ADMIN`, `PENDAFTARAN`, `DOKTER` | Mengubah status antrean. |
+| POST | `/api/visits/{id}/examination` | `DOKTER` | Simpan pemeriksaan. |
+| POST | `/api/visits/{id}/actions` | `DOKTER` | Tambah tindakan medis. |
+| POST | `/api/visits/{id}/prescriptions` | `DOKTER` | Buat resep. |
+| POST | `/api/prescriptions/{id}/dispense` | `FARMASI` | Serahkan obat dan kurangi stok. |
+
+Contoh body create visit:
+
+```json
+{
+  "patient_id": 1,
+  "schedule_id": 1,
+  "chief_complaint": "Demam dan batuk"
+}
+```
+
+`doctor_id` dan `poli_id` diambil dari `schedule_id` agar tidak terjadi mismatch jadwal. Nomor antrean dibuat di dalam transaction memakai counter per poli dan tanggal.
 
 ### Billing
 

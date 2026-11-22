@@ -5,6 +5,7 @@ import { AdminPage } from './pages/AdminPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { MasterDataPage } from './pages/MasterDataPage'
+import { VisitsPage } from './pages/VisitsPage'
 import './App.css'
 
 export default function App() {
@@ -21,6 +22,12 @@ export default function App() {
       <Route element={<ProtectedRoute roles={['ADMIN', 'PENDAFTARAN']} />}>
         <Route element={<AppLayout />}>
           <Route path="/master" element={<MasterDataPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={['ADMIN', 'PENDAFTARAN', 'DOKTER']} />}>
+        <Route element={<AppLayout />}>
+          <Route path="/visits" element={<VisitsPage />} />
         </Route>
       </Route>
 
