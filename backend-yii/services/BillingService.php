@@ -7,6 +7,7 @@ namespace app\services;
 use app\models\Invoice;
 use app\models\InvoiceItem;
 use app\models\MedicalAction;
+use app\models\Prescription;
 use app\models\Visit;
 use app\models\VisitAction;
 
@@ -50,6 +51,26 @@ class BillingService
             $visitAction->quantity,
             $visitAction->price,
         );
+
+        $this->recalculate($invoice);
+        return $invoice;
+    }
+
+    public function addMedicineItems(Visit $visit, Prescription $prescription): Invoice
+    {
+        $invoice = $this->ensureInvoice($visit);
+        $this->assertEditable($invoice);
+
+        foreach ($prescription->items as $item) {
+            $this->addItem(
+                $invoice,
+                'MEDICINE',
+                $item->id,
+                "Obat: {$item->medicine->name}",
+                $item->quantity,
+                (float) $item->price,
+            );
+        }
 
         $this->recalculate($invoice);
         return $invoice;

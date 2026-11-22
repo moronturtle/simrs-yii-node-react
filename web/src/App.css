@@ -248,7 +248,8 @@ th {
 
 .status-in_exam,
 .status-lab,
-.status-pharmacy {
+.status-pharmacy,
+.status-prescribed {
   background: #fef3c7;
   color: #92400e;
 }
@@ -258,7 +259,8 @@ th {
   color: #6d28d9;
 }
 
-.status-paid {
+.status-paid,
+.status-dispensed {
   background: #dcfce7;
   color: #166534;
 }
@@ -278,4 +280,19 @@ th {
 
 .section-title {
   margin-top: 28px;
+}
+
+.prescription-item {
+  border-top: 1px solid #e2e8f0;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 2fr 1fr 1fr 90px auto;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.prescription-item:first-of-type {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
 }

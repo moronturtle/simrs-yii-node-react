@@ -135,6 +135,8 @@ Response list:
 | POST | `/api/visits/{id}/examination` | `DOKTER` | Simpan pemeriksaan. |
 | GET | `/api/visits/{id}/actions` | Semua role login | Daftar tindakan kunjungan. |
 | POST | `/api/visits/{id}/actions` | `DOKTER` | Tambah tindakan medis. |
+| GET | `/api/prescriptions` | Semua role login | Daftar resep; filter `visit_id` dan `status`. |
+| GET | `/api/prescriptions/{id}` | Semua role login | Detail resep dan item obat. |
 | POST | `/api/visits/{id}/prescriptions` | `DOKTER` | Buat resep. |
 | POST | `/api/prescriptions/{id}/dispense` | `FARMASI` | Serahkan obat dan kurangi stok. |
 
@@ -177,6 +179,26 @@ Contoh body tindakan:
 ```
 
 Saat tindakan dibuat, `visit_actions.price` dan `invoice_items.unit_price` menyimpan snapshot tarif saat itu. Perubahan harga master tindakan tidak mengubah tagihan lama.
+
+Contoh body resep:
+
+```json
+{
+  "notes": "Diminum setelah makan",
+  "items": [
+    {
+      "medicine_id": 1,
+      "dose": "500mg",
+      "frequency": "3x sehari",
+      "quantity": 10
+    }
+  ]
+}
+```
+
+Resep hanya bisa dibuat setelah pemeriksaan dimulai. Harga obat disimpan sebagai snapshot di `prescription_items.price`. Setelah resep dibuat, status kunjungan berubah menjadi `PHARMACY`.
+
+Saat dispense, stok obat dikurangi di dalam transaction memakai conditional update `stock >= quantity`. Kalau ada satu item yang stoknya kurang, semua perubahan dibatalkan dan endpoint mengembalikan `409`. Item obat kemudian masuk `invoice_items` sebagai `MEDICINE`, dan status kunjungan berubah menjadi `BILLING`. Dispense ulang resep yang sama juga mengembalikan `409`, jadi stok tidak berkurang dua kali.
 
 ### Billing
 

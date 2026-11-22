@@ -51,9 +51,10 @@ erDiagram
 - `patients.medical_record_no` harus unik.
 - `visits` mencegah kunjungan aktif ganda untuk pasien yang sama lewat partial unique index.
 - `queue_counters` menyimpan counter antrean per `poli_id + queue_date`; update counter dilakukan atomik dengan `INSERT ... ON CONFLICT ... RETURNING`.
+- `prescription_items.price` menyimpan snapshot harga obat saat resep dibuat.
 - `invoice_items` menyimpan nama layanan dan harga sebagai snapshot.
 - `payments.idempotency_key` harus unik untuk mencegah pembayaran ganda.
-- `medicines.stock` memakai `CHECK (stock >= 0)`.
+- `medicines.stock` memakai `CHECK (stock >= 0)` dan penurunan stok memakai conditional update `stock >= quantity` di transaction.
 - Index dibuat pada kolom yang sering dipakai filter: tanggal, status, `patient_id`, `visit_id`.
 
 ## Strategi index

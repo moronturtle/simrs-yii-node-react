@@ -49,6 +49,8 @@ WHERE id = :id AND stock >= :qty
 
 Kalau tidak ada row yang berubah, transaksi dibatalkan. Ini mencegah stok menjadi minus saat dua transaksi berjalan bersamaan.
 
+Resep dibuat oleh `DOKTER` setelah pemeriksaan dimulai, lalu `FARMASI` melakukan dispense. Semua perubahan penting berada dalam satu transaction: pengurangan stok, status item resep, status resep, status kunjungan, dan invoice item `MEDICINE`. Dispense ulang selalu ditolak `409` supaya stok tidak terpotong dua kali.
+
 ## 7. Pembayaran memakai idempotency key
 
 Client mengirim `idempotency_key` saat membuat pembayaran. Database memberi unique constraint pada key tersebut.

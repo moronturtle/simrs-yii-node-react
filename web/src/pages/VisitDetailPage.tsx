@@ -9,9 +9,15 @@ import {
   type VisitAction,
 } from '../api/clinical'
 import { listResource, type MasterRow } from '../api/masterData'
+import {
+  createPrescription,
+  listPrescriptions,
+  type Prescription,
+} from '../api/pharmacy'
 import { getVisit, type Visit } from '../api/visits'
 import { useAuth } from '../auth/useAuth'
 import { ExaminationForm } from '../components/ExaminationForm'
+import { PrescriptionForm } from '../components/PrescriptionForm'
 import { VisitActionForm } from '../components/VisitActionForm'
 
 export function VisitDetailPage() {
@@ -21,7 +27,9 @@ export function VisitDetailPage() {
   const [visit, setVisit] = useState<Visit | null>(null)
   const [examination, setExamination] = useState<Examination | null>(null)
   const [visitActions, setVisitActions] = useState<VisitAction[]>([])
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
   const [actions, setActions] = useState<MasterRow[]>([])
+  const [medicines, setMedicines] = useState<MasterRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const canWrite = hasRole(['DOKTER'])
@@ -33,15 +41,19 @@ export function VisitDetailPage() {
     setError('')
 
     try {
-      const [visitResult, actionResult, masterActions] = await Promise.all([
+      const [visitResult, actionResult, masterActions, masterMedicines, prescriptionResult] = await Promise.all([
         getVisit(token, visitId),
         listVisitActions(token, visitId),
         listResource('/actions', token),
+        listResource('/medicines', token),
+        listPrescriptions(token, { visit_id: String(visitId) }),
       ])
 
       setVisit(visitResult)
       setVisitActions(actionResult.items)
       setActions(masterActions.items)
+      setMedicines(masterMedicines.items)
+      setPrescriptions(prescriptionResult.items)
 
       try {
         setExamination(await getExamination(token, visitId))
@@ -81,6 +93,17 @@ export function VisitDetailPage() {
     }
   }
 
+  async function handlePrescription(body: Parameters<typeof createPrescription>[2]) {
+    if (!token) return
+
+    try {
+      await createPrescription(token, visitId, body)
+      await loadData()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyimpan resep')
+    }
+  }
+
   if (loading) {
     return <p className="muted">Memuat kunjungan...</p>
   }
@@ -109,6 +132,7 @@ export function VisitDetailPage() {
         <>
           <ExaminationForm initial={examination} onSubmit={handleExamination} />
           <VisitActionForm actions={actions} onSubmit={handleAction} />
+          <PrescriptionForm medicines={medicines} onSubmit={handlePrescription} />
         </>
       ) : examination && (
         <div className="card">
@@ -142,6 +166,35 @@ export function VisitDetailPage() {
               </tr>
             ))}
             {visitActions.length === 0 && <tr><td colSpan={5}>Belum ada tindakan.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+
+      <h2 className="section-title">Resep</h2>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Obat</th>
+              <th>Catatan</th>
+            </tr>
+          </thead>
+          <tbody>
+            {prescriptions.map((prescription) => (
+              <tr key={prescription.id}>
+                <td><span className={`status status-${prescription.status.toLowerCase()}`}>{prescription.status}</span></td>
+                <td>
+                  {prescription.items.map((item) => (
+                    <div key={item.id}>
+                      {String(item.medicine?.name ?? '-')} x{item.quantity} · {item.dose} · {item.frequency}
+                    </div>
+                  ))}
+                </td>
+                <td>{prescription.notes || '-'}</td>
+              </tr>
+            ))}
+            {prescriptions.length === 0 && <tr><td colSpan={3}>Belum ada resep.</td></tr>}
           </tbody>
         </table>
       </div>

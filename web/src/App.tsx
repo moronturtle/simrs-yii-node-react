@@ -5,6 +5,7 @@ import { AdminPage } from './pages/AdminPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
 import { MasterDataPage } from './pages/MasterDataPage'
+import { PharmacyPage } from './pages/PharmacyPage'
 import { VisitDetailPage } from './pages/VisitDetailPage'
 import { VisitsPage } from './pages/VisitsPage'
 import './App.css'
@@ -30,6 +31,12 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/visits" element={<VisitsPage />} />
           <Route path="/visits/:id" element={<VisitDetailPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={['ADMIN', 'FARMASI']} />}>
+        <Route element={<AppLayout />}>
+          <Route path="/pharmacy" element={<PharmacyPage />} />
         </Route>
       </Route>
 
