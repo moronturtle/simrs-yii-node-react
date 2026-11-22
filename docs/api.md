@@ -39,6 +39,42 @@ Jika gagal:
 |--------|----------|--------|
 | POST | `/api/auth/login` | Login dan mengambil JWT. |
 | GET | `/api/auth/me` | Data user yang sedang login. |
+| GET | `/api/admin/ping` | Contoh endpoint khusus role `ADMIN`. |
+
+Contoh login:
+
+```json
+{
+  "username": "admin",
+  "password": "password123"
+}
+```
+
+Response sukses:
+
+```json
+{
+  "success": true,
+  "data": {
+    "token": "...",
+    "token_type": "Bearer",
+    "expires_in": 28800,
+    "user": {
+      "id": 1,
+      "username": "admin",
+      "name": "Administrator",
+      "role": "ADMIN"
+    }
+  },
+  "error": null
+}
+```
+
+Endpoint selain login memakai header:
+
+```http
+Authorization: Bearer <token>
+```
 
 ### Master data
 

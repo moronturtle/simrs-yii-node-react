@@ -48,6 +48,15 @@ Setelah service aktif:
 - Node API: `http://localhost:3000/api/health`
 - React web: `http://localhost:5173`
 
+Akun seed untuk development memakai password `password123`:
+
+- `admin` — role `ADMIN`
+- `pendaftaran` — role `PENDAFTARAN`
+- `dokter` — role `DOKTER`
+- `farmasi` — role `FARMASI`
+- `lab` — role `LAB`
+- `kasir` — role `KASIR`
+
 Untuk berhenti:
 
 ```bash

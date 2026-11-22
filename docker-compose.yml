@@ -49,6 +49,9 @@ services:
       context: ./web
     container_name: simrs-web
     env_file: .env
+    environment:
+      YII_PROXY_TARGET: http://yii
+      NODE_PROXY_TARGET: http://node:3000
     ports:
       - "5173:5173"
     volumes:

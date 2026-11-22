@@ -1,33 +1,29 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { AppLayout } from './layouts/AppLayout'
+import { AdminPage } from './pages/AdminPage'
+import { DashboardPage } from './pages/DashboardPage'
+import { LoginPage } from './pages/LoginPage'
 import './App.css'
 
-const modules = [
-  'Pendaftaran dan antrean',
-  'Pemeriksaan dokter',
-  'Farmasi dan resep',
-  'Laboratorium',
-  'Billing dan pembayaran',
-]
-
-function App() {
+export default function App() {
   return (
-    <main className="page">
-      <section className="hero">
-        <p className="eyebrow">SIMRS Rawat Jalan</p>
-        <h1>Sistem pelayanan pasien terintegrasi</h1>
-        <p className="subtitle">
-          Alur utama dari pendaftaran sampai pembayaran.
-        </p>
-      </section>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
 
-      <section className="grid">
-        {modules.map((module) => (
-          <article className="card" key={module}>
-            <h2>{module}</h2>
-          </article>
-        ))}
-      </section>
-    </main>
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route index element={<DashboardPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<ProtectedRoute roles={['ADMIN']} />}>
+        <Route element={<AppLayout />}>
+          <Route path="/admin" element={<AdminPage />} />
+        </Route>
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
-
-export default App

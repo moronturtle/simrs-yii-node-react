@@ -37,7 +37,8 @@ $config = [
         ],
         'user' => [
             'identityClass' => \app\models\User::class,
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
+            'loginUrl' => null,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -58,6 +59,10 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'GET api/ping' => 'site/ping',
+                'POST api/auth/login' => 'api/auth/login',
+                'GET api/auth/me' => 'api/auth/me',
+                'GET api/admin/ping' => 'api/admin/ping',
+                'OPTIONS api/<route:.*>' => 'site/options',
             ],
         ],
     ],

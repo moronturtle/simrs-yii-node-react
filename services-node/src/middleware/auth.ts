@@ -4,8 +4,9 @@ import { config } from '../config.js'
 
 type JwtUser = {
   sub: string
-  role: string
+  username: string
   name?: string
+  role: string
 }
 
 declare global {
@@ -28,7 +29,9 @@ export function authRequired(req: Request, res: Response, next: NextFunction) {
   }
 
   try {
-    req.user = jwt.verify(header.slice(7), config.jwtSecret) as JwtUser
+    req.user = jwt.verify(header.slice(7), config.jwtSecret, {
+      issuer: 'simrs-yii',
+    }) as JwtUser
     return next()
   } catch {
     return res.status(401).json({

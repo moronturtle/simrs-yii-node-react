@@ -83,6 +83,12 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionOptions(): null
+    {
+        Yii::$app->response->statusCode = 204;
+        return null;
+    }
+
     /**
      * Displays homepage.
      *
