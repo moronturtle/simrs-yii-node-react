@@ -21,20 +21,24 @@ Aplikasi SIMRS rawat jalan untuk mengelola alur pendaftaran pasien sampai pembay
 
 ## Kebutuhan
 
-- PHP 8.4+
-- Composer
-- Node.js 20+
-- PostgreSQL 15+
-- Docker opsional untuk menjalankan PostgreSQL
+Cara utama menjalankan aplikasi adalah Docker Compose:
+
+- Docker Desktop
+- Docker Compose
+- Git
+
+PHP 8.4+, Composer, Node.js 20+, dan PostgreSQL 15+ hanya diperlukan kalau ingin menjalankan aplikasi tanpa Docker.
 
 ## Menjalankan aplikasi
 
 ```bash
 cp .env.example .env
-docker compose up -d db
 docker compose up -d --build
+docker compose exec yii composer install
 docker compose exec yii php yii migrate/up --interactive=0
 ```
+
+Perintah di atas menjalankan semua service: PostgreSQL, Yii API, Node service, dan React web. Dependency PHP dipasang lewat Composer di dalam container Yii.
 
 Kalau menjalankan Docker Desktop dari WSL tanpa integrasi WSL, gunakan `docker.exe compose` sebagai pengganti `docker compose`.
 
@@ -43,6 +47,12 @@ Setelah service aktif:
 - Yii API: `http://localhost:8080/api/ping`
 - Node API: `http://localhost:3000/api/health`
 - React web: `http://localhost:5173`
+
+Untuk berhenti:
+
+```bash
+docker compose stop
+```
 
 ## Dokumentasi
 
