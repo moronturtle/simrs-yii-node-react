@@ -22,7 +22,7 @@ services:
     container_name: simrs-yii
     env_file: .env
     ports:
-      - "8080:80"
+      - "8081:80"
     volumes:
       - ./backend-yii:/var/www/html
     depends_on:
@@ -35,7 +35,7 @@ services:
     container_name: simrs-node
     env_file: .env
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./services-node:/app
       - node-modules:/app/node_modules
