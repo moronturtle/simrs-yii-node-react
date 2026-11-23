@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-#== Bash helpers ==
 
 function info {
   echo " "
@@ -8,7 +7,6 @@ function info {
   echo " "
 }
 
-#== Provision script ==
 
 info "Provision-script user: `whoami`"
 

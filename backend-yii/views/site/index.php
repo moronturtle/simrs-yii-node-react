@@ -1,6 +1,6 @@
 <?php
 
-/** @var yii\web\View $this */
+
 
 use yii\helpers\Html;
 
@@ -10,7 +10,7 @@ $this->params['meta_keywords'] = 'yii, yii2, php, framework, web application, hi
 ?>
 <div class="site-index">
 
-    <!-- Hero banner with Yii gradient -->
+    
     <div class="hero-banner text-white rounded-4 p-5 mb-4 position-relative overflow-hidden">
         <?= Html::img(Yii::getAlias('@web/images/yii3_full_white_for_dark.svg'), [
             'alt' => '',
@@ -45,7 +45,7 @@ $this->params['meta_keywords'] = 'yii, yii2, php, framework, web application, hi
         </div>
     </div>
 
-    <!-- Extensions grid -->
+    
     <div class="row g-3">
         <div class="col-md-6 col-lg-4">
             <div class="card h-100 border-0 shadow-sm rounded-3 extension-card">

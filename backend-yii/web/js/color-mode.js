@@ -1,7 +1,4 @@
-/*!
- * Color mode toggler for Bootstrap 5.3+
- * Based on https://getbootstrap.com/docs/5.3/customize/color-modes/
- */
+
 (() => {
     'use strict'
 

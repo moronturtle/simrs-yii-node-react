@@ -1,10 +1,6 @@
 <?php
 
-/**
- * @link https://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
- */
+
 
 declare(strict_types=1);
 
@@ -15,12 +11,7 @@ use yii\web\AssetBundle;
 use yii\web\View;
 use yii\web\YiiAsset;
 
-/**
- * Main application asset bundle.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
+
 class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';

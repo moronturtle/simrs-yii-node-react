@@ -10,7 +10,7 @@ main > .container {
     font-style: italic;
 }
 
-/* add sorting icons to gridview sort links */
+
 a.asc:after, a.desc:after {
     content: '';
     left: 3px;
@@ -50,13 +50,13 @@ a.desc:after {
     margin: 0 0 15px 0;
 }
 
-/* align navbar brand baseline with nav links */
+
 .navbar > .container,
 .navbar > .container-fluid {
     align-items: baseline;
 }
 
-/* align the logout "link" (button in form) of the navbar */
+
 .nav li > form > button.logout {
     color: var(--bs-navbar-color);
 }
@@ -75,13 +75,13 @@ a.desc:after {
     color: var(--bs-navbar-hover-color);
 }
 
-/* footer logo: light logo by default (light bg-body-tertiary), dark logo for dark theme */
+
 .footer-logo-dark { display: none; }
 
 [data-bs-theme="dark"] .footer-logo-light { display: none; }
 [data-bs-theme="dark"] .footer-logo-dark  { display: inline-block; }
 
-/* login inputs: seamless icon inside input (Volt style) */
+
 .login-split-card .input-group {
     border: var(--bs-border-width) solid var(--bs-border-color);
     border-radius: var(--bs-border-radius);
@@ -113,7 +113,7 @@ a.desc:after {
     box-shadow: 0 0 0 .25rem rgba(var(--bs-primary-rgb), .25);
 }
 
-/* validation styles for login split card (browsers with :has()) */
+
 @supports selector(.input-group:has(.is-invalid)) {
     .login-split-card .input-group:has(.is-invalid) ~ .invalid-feedback {
         display: block;
@@ -130,7 +130,7 @@ a.desc:after {
     }
 }
 
-/* fallback validation styles for login split card (browsers without :has()) */
+
 @supports not selector(.input-group:has(.is-invalid)) {
     .login-split-card .invalid-feedback:not(:empty) {
         display: block;
@@ -147,7 +147,7 @@ a.desc:after {
     }
 }
 
-/* login split card */
+
 .login-split-card {
     border-radius: 1rem;
     box-shadow: 0 4px 24px rgba(0, 0, 0, .10);
@@ -202,7 +202,7 @@ a.desc:after {
     transform: translateY(0);
 }
 
-/* dark mode login card */
+
 [data-bs-theme="dark"] .login-split-card {
     background-color: var(--bs-body-bg);
     box-shadow: 0 0 0 1px var(--bs-border-color), 0 4px 24px rgba(0, 0, 0, .4);
@@ -212,24 +212,24 @@ a.desc:after {
     filter: invert(1);
 }
 
-/* contact form textarea height */
+
 .site-contact textarea.form-control {
     height: 140px;
 }
 
-/* captcha: blend with card background */
+
 .site-contact img[src*="captcha"] {
     border-radius: var(--bs-border-radius);
     mix-blend-mode: multiply;
 }
 
-/* dark mode: invert captcha for visibility on dark background */
+
 [data-bs-theme="dark"] .site-contact img[src*="captcha"] {
     mix-blend-mode: screen;
     filter: invert(1) hue-rotate(180deg);
 }
 
-/* centered page layout */
+
 .site-login,
 .site-contact,
 .site-index,
@@ -270,7 +270,7 @@ a.desc:after {
     }
 }
 
-/* hero banner */
+
 .hero-banner {
     background: linear-gradient(135deg, #83C933 0%, #3a9cbd 40%, #40B3D8 100%);
     position: relative;
@@ -300,7 +300,7 @@ a.desc:after {
     pointer-events: none;
 }
 
-/* extension cards */
+
 .extension-card {
     transition: transform .15s ease-in-out, box-shadow .15s ease-in-out;
 }
@@ -315,7 +315,7 @@ a.desc:after {
     line-height: 1;
 }
 
-/* dark mode: extension cards */
+
 [data-bs-theme="dark"] .extension-card {
     background-color: var(--bs-body-bg);
     box-shadow: 0 0 0 1px var(--bs-border-color), 0 2px 8px rgba(0, 0, 0, .3);

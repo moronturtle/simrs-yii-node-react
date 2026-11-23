@@ -26,10 +26,10 @@ final class ContactFormTest extends \Codeception\Test\Unit
 
         verify($model->contact(Yii::$app->mailer, 'admin@example.com', 'noreply@example.com', 'Example.com mailer'))->notEmpty();
 
-        // using Yii2 module actions to check email was sent
+        
         $this->tester->seeEmailIsSent();
 
-        /** @var MessageInterface $emailMessage */
+        
         $emailMessage = $this->tester->grabLastSentEmail();
 
         verify($emailMessage)->instanceOf('yii\mail\MessageInterface');

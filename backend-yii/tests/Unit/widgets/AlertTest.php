@@ -247,7 +247,7 @@ class AlertTest extends \Codeception\Test\Unit
     {
         $session = Yii::$app->session;
 
-        // Ensure the session is closed and no session cookie is present.
+        
         $session->close();
 
         unset($_COOKIE[$session->getName()]);
@@ -271,7 +271,7 @@ class AlertTest extends \Codeception\Test\Unit
 
         Alert::widget();
 
-        // Simulate redirect
+        
         Yii::$app->session->close();
         Yii::$app->session->open();
 
