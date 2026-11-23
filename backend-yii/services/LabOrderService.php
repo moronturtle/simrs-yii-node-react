@@ -50,7 +50,8 @@ class LabOrderService
                 }
             }
 
-            (new BillingService())->addLabItem($visit, $order);
+            (new AuditService())->record('lab_orders', (int) $order->id, 'INSERT', null, $order->getAttributes(), $userId);
+            (new BillingService())->addLabItem($visit, $order, $userId);
             $transaction->commit();
             return $order;
         } catch (Throwable $exception) {

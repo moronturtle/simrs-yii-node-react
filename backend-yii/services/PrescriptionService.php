@@ -59,15 +59,24 @@ class PrescriptionService
 
     public function dispense(Prescription $prescription, int $userId): Prescription
     {
-        if ($prescription->status !== 'PRESCRIBED') {
-            throw new ServiceException('Resep sudah diproses atau dibatalkan', 409);
-        }
-
-        $prescription->populateRelation('items', $prescription->getItems()->with('medicine')->all());
-        $visit = $prescription->visit;
         $transaction = Yii::$app->db->beginTransaction();
 
         try {
+            $status = Yii::$app->db->createCommand(
+                'SELECT status FROM prescriptions WHERE id = :id FOR UPDATE'
+            )->bindValue(':id', $prescription->id)->queryScalar();
+
+            if ($status === false) {
+                throw new ServiceException('Resep tidak ditemukan', 404);
+            }
+
+            if ($status !== 'PRESCRIBED') {
+                throw new ServiceException('Resep sudah diproses atau dibatalkan', 409);
+            }
+
+            $prescription->populateRelation('items', $prescription->getItems()->with('medicine')->all());
+            $visit = $prescription->visit;
+
             foreach ($prescription->items as $item) {
                 $this->reduceStock($item);
                 $item->dispensed_at = date('Y-m-d H:i:s');
@@ -90,7 +99,8 @@ class PrescriptionService
                 }
             }
 
-            (new BillingService())->addMedicineItems($visit, $prescription);
+            (new AuditService())->record('prescriptions', (int) $prescription->id, 'UPDATE', ['status' => $status], $prescription->getAttributes(), $userId);
+            (new BillingService())->addMedicineItems($visit, $prescription, $userId);
             $transaction->commit();
             return $prescription;
         } catch (Throwable $exception) {

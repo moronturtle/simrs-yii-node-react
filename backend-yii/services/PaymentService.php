@@ -93,17 +93,20 @@ class PaymentService
                 throw new ServiceException('Pembayaran tidak valid', 422, $payment->errors);
             }
 
+            (new AuditService())->record('payments', (int) $payment->id, 'INSERT', null, $payment->getAttributes(), $userId);
             $invoice->total_amount = $totalAmount;
             $invoice->paid_amount = round($paidAmount + $amount, 2);
-            (new BillingService())->recalculate($invoice);
+            (new BillingService())->recalculate($invoice, $userId);
 
             if ($invoice->status === 'PAID') {
                 $visit = Visit::findOne((int) $locked['visit_id']);
                 if ($visit) {
+                    $oldVisitValues = $visit->getAttributes();
                     $visit->status = 'PAID';
                     if (!$visit->save()) {
                         throw new ServiceException('Status kunjungan tidak bisa diubah', 422, $visit->errors);
                     }
+                    (new AuditService())->record('visits', (int) $visit->id, 'UPDATE', $oldVisitValues, $visit->getAttributes(), $userId);
                 }
             }
 

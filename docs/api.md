@@ -211,7 +211,7 @@ Contoh body resep:
 
 Resep hanya bisa dibuat setelah pemeriksaan dimulai. Harga obat disimpan sebagai snapshot di `prescription_items.price`. Setelah resep dibuat, status kunjungan berubah menjadi `PHARMACY`.
 
-Saat dispense, stok obat dikurangi di dalam transaction memakai conditional update `stock >= quantity`. Kalau ada satu item yang stoknya kurang, semua perubahan dibatalkan dan endpoint mengembalikan `409`. Item obat kemudian masuk `invoice_items` sebagai `MEDICINE`, dan status kunjungan berubah menjadi `BILLING`. Dispense ulang resep yang sama juga mengembalikan `409`, jadi stok tidak berkurang dua kali.
+Saat dispense, row resep dikunci `FOR UPDATE`, lalu stok obat dikurangi di dalam transaction memakai conditional update `stock >= quantity`. Kalau ada satu item yang stoknya kurang, semua perubahan dibatalkan dan endpoint mengembalikan `409`. Item obat kemudian masuk `invoice_items` sebagai `MEDICINE`, dan status kunjungan berubah menjadi `BILLING`. Dispense ulang resep yang sama juga mengembalikan `409`, jadi stok tidak berkurang dua kali.
 
 ### Billing
 

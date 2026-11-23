@@ -25,6 +25,8 @@ class ExaminationService
         $examination = Examination::findOne(['visit_id' => $visit->id]) ?? new Examination([
             'visit_id' => $visit->id,
         ]);
+        $isNewRecord = $examination->isNewRecord;
+        $oldValues = $isNewRecord ? null : $examination->getAttributes();
 
         $examination->anamnesis = trim((string) ($data['anamnesis'] ?? '')) ?: null;
         $examination->vital_signs = $vitalSigns;
@@ -41,11 +43,22 @@ class ExaminationService
                 throw new ServiceException('Data pemeriksaan tidak valid', 422, $examination->errors);
             }
 
+            (new AuditService())->record(
+                'examinations',
+                (int) $examination->id,
+                $isNewRecord ? 'INSERT' : 'UPDATE',
+                $oldValues,
+                $examination->getAttributes(),
+                $userId,
+            );
+
             if ($visit->status === 'REGISTERED') {
+                $oldVisitValues = $visit->getAttributes();
                 $visit->status = 'IN_EXAM';
                 if (!$visit->save()) {
                     throw new ServiceException('Status kunjungan tidak bisa diubah', 422, $visit->errors);
                 }
+                (new AuditService())->record('visits', (int) $visit->id, 'UPDATE', $oldVisitValues, $visit->getAttributes(), $userId);
             }
 
             $transaction->commit();

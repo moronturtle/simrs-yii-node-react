@@ -70,4 +70,5 @@ docker compose stop
 - [Referensi schema SQL](docs/schema.sql)
 - [Daftar endpoint API](docs/api.md)
 - [Postman collection](docs/postman_collection.json)
+- [Panduan demo dan screenshot](docs/demo.md)
 - [Keputusan teknis](docs/keputusan-teknis.md)

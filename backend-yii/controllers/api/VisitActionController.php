@@ -56,7 +56,7 @@ class VisitActionController extends BaseApiController
         }
 
         try {
-            $item = (new VisitActionService())->add($visit, Yii::$app->request->bodyParams);
+            $item = (new VisitActionService())->add($visit, Yii::$app->request->bodyParams, (int) Yii::$app->user->id);
         } catch (ServiceException $exception) {
             return $this->failure('VISIT_ACTION_ERROR', $exception->getMessage(), $exception->statusCode, $exception->details);
         }

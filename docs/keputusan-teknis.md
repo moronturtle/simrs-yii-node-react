@@ -51,7 +51,7 @@ WHERE id = :id AND stock >= :qty
 
 Kalau tidak ada row yang berubah, transaksi dibatalkan. Ini mencegah stok menjadi minus saat dua transaksi berjalan bersamaan.
 
-Resep dibuat oleh `DOKTER` setelah pemeriksaan dimulai, lalu `FARMASI` melakukan dispense. Semua perubahan penting berada dalam satu transaction: pengurangan stok, status item resep, status resep, status kunjungan, dan invoice item `MEDICINE`. Dispense ulang selalu ditolak `409` supaya stok tidak terpotong dua kali.
+Resep dibuat oleh `DOKTER` setelah pemeriksaan dimulai, lalu `FARMASI` melakukan dispense. Row resep dikunci dengan `SELECT ... FOR UPDATE` sebelum status dicek, jadi dua request dispense bersamaan tidak bisa sama-sama lolos validasi `PRESCRIBED`. Semua perubahan penting berada dalam satu transaction: pengurangan stok, status item resep, status resep, status kunjungan, dan invoice item `MEDICINE`. Dispense ulang selalu ditolak `409` supaya stok tidak terpotong dua kali.
 
 ## 7. Pembayaran memakai idempotency key
 
@@ -59,13 +59,11 @@ Client mengirim `idempotency_key` saat membuat pembayaran. Database memberi uniq
 
 Kalau request diulang karena jaringan putus, sistem mengembalikan pembayaran yang sudah ada, bukan mencatat transaksi baru. Di dalam transaction, row invoice dikunci `FOR UPDATE`, nominal dicek terhadap sisa tagihan, `paid_amount` ditambah, status invoice dihitung ulang, dan visit berubah `PAID` saat lunas.
 
-## 8. Perubahan setelah billing dicatat di audit log
+## 8. Perubahan penting dicatat di audit log
 
-Kalau diagnosis atau tindakan berubah setelah invoice dibuat:
+`audit_logs` mencatat operasi penting seperti pemeriksaan, tindakan, order lab, dispense resep, invoice, item invoice, pembayaran, dan perubahan status kunjungan.
 
-- invoice belum lunas boleh dihitung ulang,
-- invoice sudah lunas memakai adjustment,
-- semua perubahan penting dicatat di `audit_logs`.
+Invoice yang belum lunas masih boleh menerima item baru lewat alur klinis. Setelah status `PAID` atau `CANCELLED`, item invoice tidak boleh ditambah lagi; endpoint mengembalikan `409`. Pendekatan ini dipilih supaya implementasi tetap sederhana dan riwayat tagihan yang sudah lunas tidak berubah.
 
 ## 9. Validasi dibuat dua lapis
 

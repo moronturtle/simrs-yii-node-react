@@ -12,7 +12,7 @@ use Throwable;
 
 class VisitActionService
 {
-    public function add(Visit $visit, array $data): VisitAction
+    public function add(Visit $visit, array $data, int $userId): VisitAction
     {
         if (in_array($visit->status, ['PAID', 'CANCELLED'], true)) {
             throw new ServiceException('Kunjungan selesai tidak bisa ditambah tindakan', 409);
@@ -42,7 +42,8 @@ class VisitActionService
                 throw new ServiceException('Data tindakan tidak valid', 422, $visitAction->errors);
             }
 
-            (new BillingService())->addActionItem($visit, $visitAction, $action);
+            (new AuditService())->record('visit_actions', (int) $visitAction->id, 'INSERT', null, $visitAction->getAttributes(), $userId);
+            (new BillingService())->addActionItem($visit, $visitAction, $action, $userId);
             $transaction->commit();
             return $visitAction;
         } catch (Throwable $exception) {
