@@ -85,6 +85,8 @@ CRUD master data memakai Yii `ActiveRecord` dan `ActiveQuery`. Ini membuat valid
 
 Raw SQL tetap dipakai di bagian yang memang butuh kontrol database langsung, misalnya conditional update stok, counter antrean, partial unique index, trigram index, dan aggregate dashboard. Jadi ORM dipakai untuk produktivitas, sedangkan SQL dipakai untuk invariant dan performa.
 
+Dashboard Node juga memakai aggregate SQL read-only. Ini sengaja dipisah dari business logic Yii supaya reporting ringan tidak ikut mengubah data inti.
+
 ## 12. UI dibuat fungsional
 
 Fokus utama adalah alur kerja yang jelas. UI dibuat rapi dan sederhana, bukan desain kompleks, supaya waktu lebih banyak dipakai untuk correctness dan transaction safety.

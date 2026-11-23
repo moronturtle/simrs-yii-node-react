@@ -331,6 +331,24 @@ th {
   margin-top: 24px;
 }
 
+.metric-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.metric {
+  display: grid;
+  gap: 12px;
+}
+
+.metric span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.metric strong {
+  font-size: 28px;
+}
+
 @media (max-width: 900px) {
   .billing-layout {
     grid-template-columns: 1fr;

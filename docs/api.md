@@ -258,6 +258,25 @@ Contoh body pembayaran:
 
 ### Dashboard
 
-| Method | Endpoint | Fungsi |
-|--------|----------|--------|
-| GET | `/api/dashboard/summary` | Ringkasan kunjungan, tindakan, pendapatan, obat, dan status bayar. |
+| Method | Endpoint | Role akses | Fungsi |
+|--------|----------|------------|--------|
+| GET | `/api/dashboard/summary` | Semua role login | Ringkasan kunjungan, pendapatan, invoice belum lunas, obat diserahkan, dan order lab pending. |
+
+Contoh response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "visitsToday": 4,
+    "totalVisits": 12,
+    "revenue": 245000,
+    "pendingInvoices": 1,
+    "medicineDispensed": 3,
+    "pendingLabOrders": 0
+  },
+  "error": null
+}
+```
+
+Dashboard Node hanya membaca aggregate PostgreSQL dan tidak mengubah data inti.

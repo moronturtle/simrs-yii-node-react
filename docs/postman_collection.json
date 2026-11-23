@@ -1,0 +1,258 @@
+{
+  "info": {
+    "name": "SIMRS Rawat Jalan",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_yii", "value": "http://localhost:8081/api" },
+    { "key": "base_node", "value": "http://localhost:3001/api" },
+    { "key": "token", "value": "" },
+    { "key": "patient_id", "value": "1" },
+    { "key": "schedule_id", "value": "1" },
+    { "key": "visit_id", "value": "1" },
+    { "key": "invoice_id", "value": "1" },
+    { "key": "payment_id", "value": "1" },
+    { "key": "lab_order_id", "value": "1" },
+    { "key": "prescription_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Yii Ping",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/ping", "host": ["{{base_yii}}"], "path": ["ping"] }
+          }
+        },
+        {
+          "name": "Node Health",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{base_node}}/health", "host": ["{{base_node}}"], "path": ["health"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body.success) {",
+                  "  pm.collectionVariables.set('token', body.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_yii}}/auth/login", "host": ["{{base_yii}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/auth/me", "host": ["{{base_yii}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Yii - Kunjungan",
+      "item": [
+        {
+          "name": "List Visits",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/visits?per-page=20", "host": ["{{base_yii}}"], "path": ["visits"], "query": [{ "key": "per-page", "value": "20" }] }
+          }
+        },
+        {
+          "name": "Create Visit",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient_id\": {{patient_id}},\n  \"schedule_id\": {{schedule_id}},\n  \"chief_complaint\": \"Demam dan batuk\"\n}"
+            },
+            "url": { "raw": "{{base_yii}}/visits", "host": ["{{base_yii}}"], "path": ["visits"] }
+          }
+        },
+        {
+          "name": "Save Examination",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"anamnesis\": \"Demam sejak 2 hari\",\n  \"primary_diagnosis\": \"ISPA\",\n  \"vital_signs\": {\n    \"temperature\": 38.2,\n    \"blood_pressure\": \"120/80\"\n  }\n}"
+            },
+            "url": { "raw": "{{base_yii}}/visits/{{visit_id}}/examination", "host": ["{{base_yii}}"], "path": ["visits", "{{visit_id}}", "examination"] }
+          }
+        },
+        {
+          "name": "Add Medical Action",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medical_action_id\": 1,\n  \"quantity\": 1,\n  \"notes\": \"Konsultasi awal\"\n}"
+            },
+            "url": { "raw": "{{base_yii}}/visits/{{visit_id}}/actions", "host": ["{{base_yii}}"], "path": ["visits", "{{visit_id}}", "actions"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Yii - Farmasi",
+      "item": [
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Diminum setelah makan\",\n  \"items\": [\n    {\n      \"medicine_id\": 1,\n      \"dose\": \"500mg\",\n      \"frequency\": \"3x sehari\",\n      \"quantity\": 2\n    }\n  ]\n}"
+            },
+            "url": { "raw": "{{base_yii}}/visits/{{visit_id}}/prescriptions", "host": ["{{base_yii}}"], "path": ["visits", "{{visit_id}}", "prescriptions"] }
+          }
+        },
+        {
+          "name": "List Prescriptions",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/prescriptions?status=PRESCRIBED", "host": ["{{base_yii}}"], "path": ["prescriptions"], "query": [{ "key": "status", "value": "PRESCRIBED" }] }
+          }
+        },
+        {
+          "name": "Dispense Prescription",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_yii}}/prescriptions/{{prescription_id}}/dispense", "host": ["{{base_yii}}"], "path": ["prescriptions", "{{prescription_id}}", "dispense"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lab",
+      "item": [
+        {
+          "name": "Create Lab Order (Yii)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"test_name\": \"Darah Lengkap\",\n  \"price\": 75000\n}"
+            },
+            "url": { "raw": "{{base_yii}}/visits/{{visit_id}}/lab-orders", "host": ["{{base_yii}}"], "path": ["visits", "{{visit_id}}", "lab-orders"] }
+          }
+        },
+        {
+          "name": "List Lab Orders (Node)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_node}}/lab/orders", "host": ["{{base_node}}"], "path": ["lab", "orders"] }
+          }
+        },
+        {
+          "name": "Start Lab Order (Node)",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{base_node}}/lab/orders/{{lab_order_id}}/start", "host": ["{{base_node}}"], "path": ["lab", "orders", "{{lab_order_id}}", "start"] }
+          }
+        },
+        {
+          "name": "Save Lab Result (Node)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"result_text\": \"Leukosit sedikit meningkat\",\n  \"result_values\": {\n    \"leukosit\": \"11.2\",\n    \"hemoglobin\": \"13.5\"\n  }\n}"
+            },
+            "url": { "raw": "{{base_node}}/lab/orders/{{lab_order_id}}/result", "host": ["{{base_node}}"], "path": ["lab", "orders", "{{lab_order_id}}", "result"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Yii - Billing",
+      "item": [
+        {
+          "name": "List Invoices",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/invoices", "host": ["{{base_yii}}"], "path": ["invoices"] }
+          }
+        },
+        {
+          "name": "Invoice Detail",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/invoices/{{invoice_id}}", "host": ["{{base_yii}}"], "path": ["invoices", "{{invoice_id}}"] }
+          }
+        },
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 50000,\n  \"method\": \"CASH\",\n  \"idempotency_key\": \"postman-pay-001\"\n}"
+            },
+            "url": { "raw": "{{base_yii}}/invoices/{{invoice_id}}/payments", "host": ["{{base_yii}}"], "path": ["invoices", "{{invoice_id}}", "payments"] }
+          }
+        },
+        {
+          "name": "Payment Receipt",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_yii}}/payments/{{payment_id}}/receipt", "host": ["{{base_yii}}"], "path": ["payments", "{{payment_id}}", "receipt"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_node}}/dashboard/summary", "host": ["{{base_node}}"], "path": ["dashboard", "summary"] }
+          }
+        }
+      ]
+    }
+  ]
+}
