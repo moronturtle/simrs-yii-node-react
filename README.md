@@ -1,13 +1,13 @@
 # SIMRS Rawat Jalan
 
-Aplikasi SIMRS rawat jalan untuk mengelola alur pendaftaran pasien sampai pembayaran.
+Aplikasi SIMRS rawat jalan sederhana. Alurnya mulai dari pendaftaran pasien sampai pembayaran.
 
 ## Komponen
 
-- `backend-yii/` — Yii2 REST API dan business logic utama.
-- `web/` — React + TypeScript untuk antarmuka pengguna.
-- `services-node/` — Node.js service untuk laboratorium dan dashboard.
-- `docs/` — dokumentasi teknis.
+- `backend-yii/` — REST API Yii2 dan logic utama.
+- `web/` — frontend React + TypeScript.
+- `services-node/` — service Node.js untuk lab dan dashboard.
+- `docs/` — dokumentasi.
 - PostgreSQL — database utama.
 
 ## Alur utama
@@ -16,18 +16,18 @@ Aplikasi SIMRS rawat jalan untuk mengelola alur pendaftaran pasien sampai pembay
 2. Sistem membuat nomor antrean.
 3. Dokter mengisi pemeriksaan, tindakan, resep, dan permintaan lab.
 4. Farmasi memproses resep dan mengurangi stok obat.
-5. Kasir membuat invoice dan mencatat pembayaran.
-6. Pasien atau kasir dapat mencetak bukti pembayaran.
+5. Sistem membuat invoice; kasir mencatat pembayaran.
+6. Kasir dapat membuka bukti pembayaran.
 
 ## Kebutuhan
 
-Cara utama menjalankan aplikasi adalah Docker Compose:
+Cara paling gampang menjalankan aplikasi adalah lewat Docker Compose:
 
 - Docker Desktop
 - Docker Compose
 - Git
 
-PHP 8.4+, Composer, Node.js 20+, dan PostgreSQL 15+ hanya diperlukan kalau ingin menjalankan aplikasi tanpa Docker.
+PHP 8.4+, Composer, Node.js 20+, dan PostgreSQL 15+ hanya dipakai kalau mau menjalankan aplikasi tanpa Docker.
 
 ## Menjalankan aplikasi
 
@@ -38,17 +38,17 @@ docker compose exec yii composer install
 docker compose exec yii php yii migrate/up --interactive=0
 ```
 
-Perintah di atas menjalankan semua service: PostgreSQL, Yii API, Node service, dan React web. Dependency PHP dipasang lewat Composer di dalam container Yii.
+Perintah di atas menyalakan PostgreSQL, Yii API, Node service, dan React web. Dependency PHP di-install lewat Composer di dalam container Yii.
 
-Kalau menjalankan Docker Desktop dari WSL tanpa integrasi WSL, gunakan `docker.exe compose` sebagai pengganti `docker compose`.
+Kalau Docker Desktop dipakai dari WSL tapi integrasi WSL belum aktif, ganti `docker compose` menjadi `docker.exe compose`.
 
-Setelah service aktif:
+Kalau sudah jalan:
 
 - Yii API: `http://localhost:8081/api/ping`
 - Node API: `http://localhost:3001/api/health`
 - React web: `http://localhost:5173`
 
-Akun seed untuk development memakai password `password123`:
+Akun demo memakai password `password123`:
 
 - `admin` — role `ADMIN`
 - `pendaftaran` — role `PENDAFTARAN`
