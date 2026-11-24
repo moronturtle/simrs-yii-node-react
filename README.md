@@ -48,14 +48,16 @@ Kalau sudah jalan:
 - Node API: `http://localhost:3001/api/health`
 - React web: `http://localhost:5173`
 
-Akun demo memakai password `password123`:
+Akun demo memakai password `password123`. Yang dimasukkan ke form login adalah username di kolom pertama:
 
-- `admin` — role `ADMIN`
-- `pendaftaran` — role `PENDAFTARAN`
-- `dokter` — role `DOKTER`
-- `farmasi` — role `FARMASI`
-- `lab` — role `LAB`
-- `kasir` — role `KASIR`
+| Username | Role |
+|----------|------|
+| `admin` | `ADMIN` |
+| `pendaftaran` | `PENDAFTARAN` |
+| `dokter` | `DOKTER` |
+| `farmasi` | `FARMASI` |
+| `lab` | `LAB` |
+| `kasir` | `KASIR` |
 
 Untuk berhenti:
 
