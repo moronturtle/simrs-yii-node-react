@@ -6,7 +6,7 @@ Aplikasi dibagi menjadi tiga bagian utama. Tujuannya supaya business logic tetap
 
 | Komponen | Peran |
 |----------|-------|
-| React | Antarmuka pengguna untuk petugas, dokter, farmasi, lab, kasir, dan admin. |
+| React + Tailwind CSS | Frontend untuk petugas, dokter, farmasi, lab, kasir, dan admin. |
 | Yii2 REST API | Pemilik business logic utama, autentikasi, role, dan transaksi data inti. |
 | Node.js service | API laboratorium dan dashboard aggregate. |
 | PostgreSQL | Database utama untuk semua layanan. |

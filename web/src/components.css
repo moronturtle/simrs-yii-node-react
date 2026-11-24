@@ -1,0 +1,100 @@
+.card,
+.master-form,
+.table-wrap {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.card {
+  padding: 20px;
+}
+
+.master-form {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.table-wrap {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.tabs,
+.toolbar,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.toolbar {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toolbar form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab,
+.secondary {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+.tab:hover:not(:disabled),
+.secondary:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.tab.active {
+  background: #0f766e;
+  border-color: #0f766e;
+  color: #ffffff;
+}
+
+.danger {
+  background: #dc2626;
+}
+
+.danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.link-button {
+  background: transparent;
+  color: #0f766e;
+  min-height: 0;
+  padding: 0;
+}
+
+.link-button:hover:not(:disabled) {
+  background: transparent;
+  color: #115e59;
+  text-decoration: underline;
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.checkbox {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-top: 26px;
+}
+
+.checkbox input {
+  min-height: auto;
+}

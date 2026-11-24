@@ -5,7 +5,7 @@ Aplikasi SIMRS rawat jalan sederhana. Alurnya mulai dari pendaftaran pasien samp
 ## Komponen
 
 - `backend-yii/` — REST API Yii2 dan logic utama.
-- `web/` — frontend React + TypeScript.
+- `web/` — frontend React + TypeScript + Tailwind CSS.
 - `services-node/` — service Node.js untuk lab dan dashboard.
 - `docs/` — dokumentasi.
 - PostgreSQL — database utama.

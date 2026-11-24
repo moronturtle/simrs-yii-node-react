@@ -41,28 +41,46 @@ export function DashboardPage() {
   ] : []
 
   return (
-    <section>
-      <p className="eyebrow">Dashboard</p>
-      <h1>Selamat datang, {user?.name}</h1>
-      <p className="muted">
-        Role aktif: <strong>{user?.role}</strong>
-      </p>
+    <section className="space-y-6">
+      <div className="rounded-2xl bg-slate-900 p-6 text-white sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-teal-300">Dashboard</p>
+            <h1 className="mt-2 text-3xl font-bold">
+              Selamat datang, {user?.name}
+            </h1>
+            <p className="mt-2 text-sm text-slate-300">
+              Ringkasan operasional rawat jalan.
+            </p>
+          </div>
+          <span className="w-fit rounded-full bg-white/10 px-3 py-1 text-sm font-semibold">
+            {user?.role}
+          </span>
+        </div>
+      </div>
 
       {error && (
-        <p className="error">
-          {error}{' '}
-          <button className="link-button" onClick={() => void loadSummary()} type="button">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <span>{error}</span>
+          <button
+            className="rounded-lg bg-red-600 px-3 py-2 font-semibold text-white hover:bg-red-700"
+            onClick={() => void loadSummary()}
+            type="button"
+          >
             Coba lagi
           </button>
-        </p>
+        </div>
       )}
-      {loading && <p className="muted">Memuat ringkasan...</p>}
 
-      <div className="grid metric-grid">
+      {loading && <p className="text-sm text-slate-500">Memuat ringkasan...</p>}
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {metrics.map((item) => (
-          <article className="card metric" key={item.label}>
-            <span>{item.label}</span>
-            <strong>{item.value}</strong>
+          <article className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm" key={item.label}>
+            <p className="text-sm text-slate-500">{item.label}</p>
+            <strong className="mt-3 block text-3xl font-bold text-slate-900">
+              {item.value}
+            </strong>
           </article>
         ))}
       </div>

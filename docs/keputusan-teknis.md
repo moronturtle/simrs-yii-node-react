@@ -87,4 +87,6 @@ Dashboard Node juga memakai aggregate SQL read-only. Ini sengaja dipisah dari bu
 
 ## 12. UI dibuat fungsional
 
-Fokus utama adalah alur kerja yang jelas. UI dibuat rapi dan sederhana, bukan desain kompleks, supaya waktu lebih banyak dipakai untuk correctness dan transaction safety.
+Frontend memakai React dan Tailwind CSS. Tailwind dipakai pada bagian yang paling terlihat seperti login, layout utama, dan dashboard. Styling lama tetap dirapikan lewat CSS bersama supaya seluruh halaman konsisten tanpa rewrite besar di akhir pengerjaan.
+
+Fokus utama tetap alur kerja yang jelas. UI dibuat rapi dan sederhana, bukan desain kompleks, supaya waktu lebih banyak dipakai untuk correctness dan transaction safety.
