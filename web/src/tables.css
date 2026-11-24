@@ -115,18 +115,7 @@ tbody tr:last-child td {
   padding-top: 0;
 }
 
-.billing-layout {
-  align-items: start;
-  display: grid;
-  gap: 24px;
-  grid-template-columns: minmax(360px, 1fr) minmax(480px, 1.2fr);
-}
-
-.billing-layout tbody tr {
-  cursor: pointer;
-}
-
-.billing-layout .selected-row {
+.selected-row {
   background: #f0fdfa;
 }
 
@@ -154,10 +143,6 @@ tbody tr:last-child td {
 }
 
 @media (max-width: 900px) {
-  .billing-layout {
-    grid-template-columns: 1fr;
-  }
-
   .prescription-item {
     grid-template-columns: 1fr;
   }

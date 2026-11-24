@@ -77,6 +77,8 @@ Enam resource master data memakai `BaseCrudController` yang sama. Perbedaan tiap
 
 Pola ini dipilih supaya controller tetap tipis, response konsisten, dan logic CRUD tidak disalin enam kali. Role tulis juga tetap eksplisit: pasien boleh ditulis `ADMIN` dan `PENDAFTARAN`, sedangkan master lain hanya `ADMIN`.
 
+No. RM pasien dibuat otomatis oleh backend saat form tidak mengirim nomor tersebut. Ini mengurangi input manual dan tetap aman karena kolomnya punya unique constraint.
+
 ## 11. ORM untuk CRUD, SQL untuk kasus khusus
 
 CRUD master data memakai Yii `ActiveRecord` dan `ActiveQuery`. Ini membuat validasi model, relasi, pagination, dan serialization tetap konsisten.

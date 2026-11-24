@@ -33,7 +33,7 @@ Akun development memakai password `password123`.
 ### 1. Login pendaftaran
 
 1. Login sebagai `pendaftaran`.
-2. Buka menu `Master Data` kalau perlu membuat pasien baru.
+2. Buka menu `Master Data` kalau perlu membuat pasien baru. No. RM dibuat otomatis oleh sistem.
 3. Buka `Antrean`, isi form `Daftar Kunjungan`, lalu simpan.
 4. Tunjukkan nomor antrean dan status `REGISTERED`.
 

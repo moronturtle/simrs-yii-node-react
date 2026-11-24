@@ -121,6 +121,8 @@ Response list:
 | GET/POST | `/api/medicines` | List dan tambah obat. |
 | GET/PUT/PATCH/DELETE | `/api/medicines/{id}` | Detail, ubah, hapus obat. |
 
+Untuk pasien, `medical_record_no` tidak perlu dikirim saat create. Backend akan membuat nomor dengan format `RM-000001`; kalau client mengirim nilai sendiri, validasi `UNIQUE` tetap berlaku.
+
 ### Rawat jalan
 
 `GET /api/visits` mendukung query `q`, `status`, `visit_date`, `patient_id`, `poli_id`, `doctor_id`, `page`, dan `per-page`.

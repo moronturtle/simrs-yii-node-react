@@ -41,7 +41,7 @@ export function VisitCreateForm({ patients, schedules, onSubmit, onCancel }: Pro
 
   return (
     <form className="master-form" onSubmit={handleSubmit}>
-      <h2>Daftar Kunjungan</h2>
+      <h2>Antrean Baru</h2>
 
       <div className="form-grid">
         <label>
@@ -88,7 +88,7 @@ export function VisitCreateForm({ patients, schedules, onSubmit, onCancel }: Pro
 
       <div className="actions">
         <button disabled={saving} type="submit">
-          {saving ? 'Mendaftarkan...' : 'Daftarkan'}
+          {saving ? 'Menyimpan...' : 'Simpan'}
         </button>
         <button className="secondary" onClick={onCancel} type="button">
           Batal

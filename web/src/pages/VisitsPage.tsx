@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { listResource, type MasterRow } from '../api/masterData'
 import {
   createVisit,
@@ -18,6 +18,7 @@ function nameOf(row: MasterRow | undefined, field = 'name') {
 
 export function VisitsPage() {
   const { token, hasRole } = useAuth()
+  const navigate = useNavigate()
   const [visits, setVisits] = useState<Visit[]>([])
   const [patients, setPatients] = useState<MasterRow[]>([])
   const [schedules, setSchedules] = useState<MasterRow[]>([])
@@ -30,7 +31,31 @@ export function VisitsPage() {
   const [error, setError] = useState('')
 
   const canCreate = hasRole(['ADMIN', 'PENDAFTARAN'])
-  const canUpdateStatus = hasRole(['ADMIN', 'PENDAFTARAN', 'DOKTER'])
+  const canAdvance = hasRole(['ADMIN', 'DOKTER'])
+  const canCancel = hasRole(['ADMIN', 'PENDAFTARAN'])
+  const hasActions = canAdvance || canCancel
+
+  function nextAction(visit: Visit): { label: string; status: VisitStatus | null } | null {
+    if (!canAdvance) return null
+    if (visit.status === 'REGISTERED') {
+      return { label: 'Mulai Periksa', status: 'IN_EXAM' }
+    }
+    if (['IN_EXAM', 'PHARMACY', 'LAB'].includes(visit.status)) {
+      return { label: 'Lanjut Periksa', status: null }
+    }
+    return null
+  }
+
+  function canCancelVisit(visit: Visit): boolean {
+    return canCancel && !['PAID', 'CANCELLED'].includes(visit.status)
+  }
+
+  function statusHint(visit: Visit): string {
+    if (visit.status === 'BILLING') return 'Menunggu pembayaran'
+    if (visit.status === 'PAID') return 'Selesai'
+    if (visit.status === 'CANCELLED') return 'Dibatalkan'
+    return '-'
+  }
 
   const loadVisits = useCallback(async () => {
     if (!token) return
@@ -90,6 +115,20 @@ export function VisitsPage() {
     }
   }
 
+  async function handleOpenVisit(visit: Visit, nextStatus: VisitStatus | null) {
+    if (!token) return
+
+    setError('')
+    try {
+      if (nextStatus) {
+        await updateVisitStatus(token, visit.id, nextStatus)
+      }
+      navigate(`/visits/${visit.id}`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal membuka kunjungan')
+    }
+  }
+
   async function handleStatusChange(row: Visit, nextStatus: VisitStatus) {
     if (!token) return
 
@@ -106,7 +145,7 @@ export function VisitsPage() {
     <section>
       <p className="eyebrow">Pendaftaran</p>
       <h1>Antrean Rawat Jalan</h1>
-      <p className="muted">Daftarkan pasien ke jadwal dokter dan pantau status kunjungan.</p>
+      <p className="muted">Daftarkan pasien ke antrean dokter dan pantau status kunjungan.</p>
 
       <div className="toolbar">
         <form onSubmit={handleSearch}>
@@ -128,7 +167,7 @@ export function VisitsPage() {
         </form>
 
         {canCreate && (
-          <button onClick={() => setFormOpen(true)} type="button">Daftar Kunjungan</button>
+          <button onClick={() => setFormOpen(true)} type="button">Registrasi Antrean</button>
         )}
       </div>
 
@@ -155,7 +194,7 @@ export function VisitsPage() {
               <th>Dokter</th>
               <th>Tanggal</th>
               <th>Status</th>
-              {canUpdateStatus && <th>Aksi</th>}
+              {hasActions && <th>Aksi</th>}
             </tr>
           </thead>
           <tbody>
@@ -164,28 +203,44 @@ export function VisitsPage() {
                 <td><Link to={`/visits/${visit.id}`}>{visit.visit_number}</Link></td>
                 <td><strong>{visit.queue_number}</strong></td>
                 <td>
-                  {nameOf(visit.patient)}
+                  <Link to={`/visits/${visit.id}`}>{nameOf(visit.patient)}</Link>
                   <div className="muted">{String(visit.patient?.medical_record_no ?? '')}</div>
                 </td>
                 <td>{nameOf(visit.poli)}</td>
                 <td>{nameOf(visit.doctor)}</td>
                 <td>{visit.visit_date}</td>
                 <td><span className={`status status-${visit.status.toLowerCase()}`}>{visit.status}</span></td>
-                {canUpdateStatus && (
-                  <td>
-                    <select
-                      disabled={['PAID', 'CANCELLED'].includes(visit.status)}
-                      onChange={(event) => void handleStatusChange(visit, event.target.value as VisitStatus)}
-                      value={visit.status}
-                    >
-                      {visitStatuses.map((item) => <option key={item} value={item}>{item}</option>)}
-                    </select>
+                {hasActions && (
+                  <td className="row-actions">
+                    {(() => {
+                      const action = nextAction(visit)
+                      return action && (
+                        <button
+                          onClick={() => void handleOpenVisit(visit, action.status)}
+                          type="button"
+                        >
+                          {action.label}
+                        </button>
+                      )
+                    })()}
+                    {canCancelVisit(visit) && (
+                      <button
+                        className="danger"
+                        onClick={() => void handleStatusChange(visit, 'CANCELLED')}
+                        type="button"
+                      >
+                        Batalkan
+                      </button>
+                    )}
+                    {!nextAction(visit) && !canCancelVisit(visit) && (
+                      <span className="muted">{statusHint(visit)}</span>
+                    )}
                   </td>
                 )}
               </tr>
             ))}
             {!loading && visits.length === 0 && (
-              <tr><td colSpan={canUpdateStatus ? 8 : 7}>Belum ada kunjungan.</td></tr>
+              <tr><td colSpan={hasActions ? 8 : 7}>Belum ada kunjungan.</td></tr>
             )}
           </tbody>
         </table>

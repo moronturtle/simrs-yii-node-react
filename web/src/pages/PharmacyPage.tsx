@@ -4,6 +4,12 @@ import { useAuth } from '../auth/useAuth'
 
 const statuses = ['', 'PRESCRIBED', 'DISPENSED', 'CANCELLED']
 
+const statusLabels: Record<string, string> = {
+  PRESCRIBED: 'Belum Diserahkan',
+  DISPENSED: 'Sudah Diserahkan',
+  CANCELLED: 'Dibatalkan',
+}
+
 function itemSummary(prescription: Prescription) {
   return prescription.items.map((item) => (
     `${item.medicine?.name ?? 'Obat'} x${item.quantity}`
@@ -67,7 +73,7 @@ export function PharmacyPage() {
       <form className="toolbar" onSubmit={handleFilter}>
         <select onChange={(event) => setStatus(event.target.value)} value={status}>
           {statuses.map((item) => (
-            <option key={item || 'all'} value={item}>{item || 'Semua status'}</option>
+            <option key={item || 'all'} value={item}>{item ? statusLabels[item] : 'Semua status'}</option>
           ))}
         </select>
         <button className="secondary" type="submit">Filter</button>
@@ -95,16 +101,19 @@ export function PharmacyPage() {
                 <td>{String(prescription.visit?.patient?.name ?? '-')}</td>
                 <td>{String(prescription.doctor?.name ?? '-')}</td>
                 <td>{itemSummary(prescription)}</td>
-                <td><span className={`status status-${prescription.status.toLowerCase()}`}>{prescription.status}</span></td>
+                <td><span className={`status status-${prescription.status.toLowerCase()}`}>{statusLabels[prescription.status] ?? prescription.status}</span></td>
                 {canDispense && (
-                  <td>
-                    <button
-                      disabled={prescription.status !== 'PRESCRIBED'}
-                      onClick={() => void handleDispense(prescription)}
-                      type="button"
-                    >
-                      Dispense
-                    </button>
+                  <td className="row-actions">
+                    {prescription.status === 'PRESCRIBED' ? (
+                      <button
+                        onClick={() => void handleDispense(prescription)}
+                        type="button"
+                      >
+                        Serahkan Obat
+                      </button>
+                    ) : (
+                      <span className="muted">-</span>
+                    )}
                   </td>
                 )}
               </tr>

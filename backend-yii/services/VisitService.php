@@ -13,14 +13,14 @@ use yii\db\IntegrityException;
 
 class VisitService
 {
-    private const STATUS_ORDER = [
-        'REGISTERED' => 0,
-        'IN_EXAM' => 1,
-        'PHARMACY' => 2,
-        'LAB' => 2,
-        'BILLING' => 3,
-        'PAID' => 4,
-        'CANCELLED' => 99,
+    private const ALLOWED_TRANSITIONS = [
+        'REGISTERED' => ['IN_EXAM', 'CANCELLED'],
+        'IN_EXAM' => ['PHARMACY', 'LAB', 'BILLING', 'CANCELLED'],
+        'PHARMACY' => ['BILLING', 'CANCELLED'],
+        'LAB' => ['BILLING', 'CANCELLED'],
+        'BILLING' => ['CANCELLED'],
+        'PAID' => [],
+        'CANCELLED' => [],
     ];
 
     public function create(array $data, int $userId): Visit
@@ -81,15 +81,12 @@ class VisitService
             return $visit;
         }
 
-        if (in_array($visit->status, ['PAID', 'CANCELLED'], true)) {
-            throw new ServiceException('Kunjungan yang sudah selesai tidak bisa diubah', 409);
+        if ($status === 'PAID') {
+            throw new ServiceException('Status PAID hanya bisa melalui pembayaran', 409);
         }
 
-        $currentOrder = self::STATUS_ORDER[$visit->status];
-        $targetOrder = self::STATUS_ORDER[$status];
-
-        if ($status !== 'CANCELLED' && $targetOrder <= $currentOrder) {
-            throw new ServiceException('Status kunjungan tidak bisa mundur', 409);
+        if (!in_array($status, self::ALLOWED_TRANSITIONS[$visit->status], true)) {
+            throw new ServiceException('Perubahan status kunjungan tidak diizinkan', 409);
         }
 
         $visit->status = $status;

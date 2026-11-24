@@ -66,7 +66,7 @@ export function ExaminationForm({ initial, onSubmit }: Props) {
 
       <div className="form-grid">
         <label>
-          Anamnesis
+          Keluhan
           <textarea onChange={(e) => setAnamnesis(e.target.value)} value={anamnesis} />
         </label>
         <label>

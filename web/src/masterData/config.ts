@@ -45,7 +45,6 @@ export const resources: ResourceConfig[] = [
       { name: 'phone', label: 'Telepon' },
     ],
     fields: [
-      { name: 'medical_record_no', label: 'No. RM', required: true },
       { name: 'nik', label: 'NIK' },
       { name: 'name', label: 'Nama', required: true },
       { name: 'date_of_birth', label: 'Tanggal lahir', type: 'date' },

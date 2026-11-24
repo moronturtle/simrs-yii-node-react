@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
   addVisitAction,
   getExamination,
@@ -19,7 +19,7 @@ import {
   listPrescriptions,
   type Prescription,
 } from '../api/pharmacy'
-import { getVisit, type Visit } from '../api/visits'
+import { getVisit, updateVisitStatus, type Visit } from '../api/visits'
 import { useAuth } from '../auth/useAuth'
 import { ExaminationForm } from '../components/ExaminationForm'
 import { LabOrderForm } from '../components/LabOrderForm'
@@ -30,6 +30,7 @@ import { VisitActionForm } from '../components/VisitActionForm'
 export function VisitDetailPage() {
   const { id } = useParams()
   const visitId = Number(id)
+  const navigate = useNavigate()
   const { token, hasRole } = useAuth()
   const [visit, setVisit] = useState<Visit | null>(null)
   const [examination, setExamination] = useState<Examination | null>(null)
@@ -42,6 +43,8 @@ export function VisitDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const canWrite = hasRole(['DOKTER'])
+    && visit !== null
+    && ['IN_EXAM', 'PHARMACY', 'LAB'].includes(visit.status)
 
   const loadData = useCallback(async () => {
     if (!token || !visitId) return
@@ -132,6 +135,18 @@ export function VisitDetailPage() {
     }
   }
 
+  async function handleFinish() {
+    if (!token) return
+
+    setError('')
+    try {
+      await updateVisitStatus(token, visitId, 'BILLING')
+      navigate('/visits')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Gagal menyelesaikan pemeriksaan')
+    }
+  }
+
   if (loading) {
     return <p className="muted">Memuat kunjungan...</p>
   }
@@ -166,7 +181,7 @@ export function VisitDetailPage() {
       ) : examination && (
         <div className="card">
           <h2>Pemeriksaan</h2>
-          <p><strong>Anamnesis:</strong> {examination.anamnesis || '-'}</p>
+          <p><strong>Keluhan:</strong> {examination.anamnesis || '-'}</p>
           <p><strong>Diagnosis utama:</strong> {examination.primary_diagnosis}</p>
           <p><strong>Diagnosis sekunder:</strong> {examination.secondary_diagnosis || '-'}</p>
         </div>
@@ -231,6 +246,14 @@ export function VisitDetailPage() {
           </tbody>
         </table>
       </div>
+
+      {canWrite && (
+        <div className="actions">
+          <button onClick={() => void handleFinish()} type="button">
+            Selesaikan Pemeriksaan
+          </button>
+        </div>
+      )}
     </section>
   )
 }

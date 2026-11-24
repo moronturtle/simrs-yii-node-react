@@ -58,10 +58,6 @@ export function PaymentForm({ remaining, onSubmit }: Props) {
           <option value="NON_CASH">Non-tunai</option>
         </select>
       </label>
-      <label>
-        Idempotency key
-        <input onChange={(event) => setIdempotencyKey(event.target.value)} required value={idempotencyKey} />
-      </label>
       <button disabled={saving || remaining <= 0} type="submit">
         {saving ? 'Menyimpan...' : 'Simpan Pembayaran'}
       </button>
