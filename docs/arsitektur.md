@@ -27,27 +27,26 @@ flowchart LR
 ### Login dan akses fitur
 
 1. User login lewat Yii.
-2. Yii memeriksa username/password lalu menerbitkan JWT.
+2. Yii memeriksa username/password lalu membuat JWT.
 3. React menyimpan token dan mengirimnya pada setiap request.
-4. Yii memeriksa role user sebelum menjalankan endpoint inti.
+4. Yii memeriksa role user (RBAC) sebelum menjalankan endpoint inti.
 5. Node memverifikasi JWT yang sama untuk endpoint lab dan dashboard.
 
 ### Alur rawat jalan
-
-1. Petugas mencari pasien dan membuat kunjungan lewat Yii.
-2. Yii membuat nomor antrean dalam transaction.
-3. Dokter membuka antrean dan mengisi pemeriksaan lewat Yii.
-4. Tindakan yang dipilih disimpan sebagai item tagihan dengan snapshot tarif.
-5. Resep dibuat lewat Yii. Saat obat diserahkan, Yii mengurangi stok dalam transaction.
-6. Permintaan lab dibuat lewat Yii sekaligus dengan item tagihan `LAB`.
-7. Node membaca order lab yang sama, lalu petugas lab memproses status dan menginput hasil lewat Node.
-8. Dokter membaca status/hasil lab dari endpoint Node pada detail kunjungan.
-9. Yii menggabungkan biaya pendaftaran, tindakan, lab, dan obat ke invoice.
+1. Petugas pendaftaran mencari pasien yang sudah terdaftar, lalu mendaftarkannya ke antrean lewat Yii.
+2. Yii membuat nomor antrean di dalam transaction.
+3. Dokter membuka list antrean dan mengisi hasil pemeriksaan lewat Yii.
+4. Tindakan yang diberikan dokter dicatat sebagai item tagihan, lengkap dengan tarif saat itu tidak   bergantung dengan perubahan master data.
+5. Dokter membuat resep lewat Yii. Saat farmasi menyerahkan obat, Yii mengurangi stok di dalam transaction.
+6. Kalau perlu lab, dokter membuat permintaan lab lewat Yii, dan biaya lab langsung masuk sebagai item tagihan `LAB`.
+7. Petugas lab melihat order itu lewat Node, lalu mengubah statusnya dan mengisi hasil lewat Node juga.
+8. Dokter melihat status dan hasil lab dari Node di halaman detail / list antrian pasien.
+9. Biaya pendaftaran, tindakan, lab, dan obat terkumpul di satu invoice.
 10. Kasir mencatat pembayaran lewat Yii dengan idempotency key.
 
 ## Batas tanggung jawab
 
-- Yii adalah sumber kebenaran untuk kunjungan, stok, billing, pembayaran, dan riwayat pasien.
+- Data kunjungan, stok, billing, pembayaran, dan riwayat pasien dikelola dan diubah hanya lewat Yii.
 - Node hanya mengelola data lab serta menyediakan aggregate dashboard.
 - Node tidak menghitung total tagihan dan tidak mengubah stok/payment.
 - Perubahan data inti selalu dilakukan lewat endpoint Yii.

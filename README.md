@@ -16,8 +16,9 @@ Aplikasi SIMRS rawat jalan sederhana. Alurnya mulai dari pendaftaran pasien samp
 2. Sistem membuat nomor antrean.
 3. Dokter mengisi pemeriksaan, tindakan, resep, dan permintaan lab.
 4. Farmasi memproses resep dan mengurangi stok obat.
-5. Sistem membuat invoice; kasir mencatat pembayaran.
-6. Kasir dapat membuka bukti pembayaran.
+5. Lab memasukan hasil lab bila ada.
+6. Sistem membuat invoice; kasir mencatat pembayaran.
+7. Kasir dapat membuka bukti pembayaran.
 
 ## Kebutuhan
 
@@ -40,8 +41,6 @@ docker compose exec yii php yii migrate/up --interactive=0
 
 Perintah di atas menyalakan PostgreSQL, Yii API, Node service, dan React web. Dependency PHP di-install lewat Composer di dalam container Yii.
 
-Kalau Docker Desktop dipakai dari WSL tapi integrasi WSL belum aktif, ganti `docker compose` menjadi `docker.exe compose`.
-
 Kalau sudah jalan:
 
 - Yii API: `http://localhost:8081/api/ping`
@@ -59,6 +58,14 @@ Akun demo memakai password `password123`. Yang dimasukkan ke form login adalah u
 | `lab` | `LAB` |
 | `kasir` | `KASIR` |
 
+role detail:
+- ADMIN: punya akses penuh ke semua fitur
+- PENDAFTARAN: bisa mendaftarkan pasien dan mengelola antrean
+- DOKTER: bisa mengisi pemeriksaan, tindakan, resep, dan permintaan lab
+- FARMASI: bisa memproses resep dan mengurangi stok obat
+- LAB: bisa memasukkan hasil lab
+- KASIR: bisa mencatat pembayaran dan membuka bukti pembayaran
+
 Untuk berhenti:
 
 ```bash
@@ -69,8 +76,12 @@ docker compose stop
 
 - [Arsitektur aplikasi](docs/arsitektur.md)
 - [Skema database dan relasi](docs/database.md)
+- [Skema database (PDF)](docs/1-skema-database-dan-relasi.pdf)
+- [ERD (PDF)](docs/2-erd.pdf)
 - [Referensi schema SQL](docs/schema.sql)
 - [Daftar endpoint API](docs/api.md)
 - [Postman collection](docs/postman_collection.json)
 - [Panduan demo dan screenshot](docs/demo.md)
 - [Keputusan teknis](docs/keputusan-teknis.md)
+- [Test case fitur utama](docs/test-cases.md)
+- [Screenshot aplikasi](docs/screenshots/)

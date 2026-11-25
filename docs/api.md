@@ -1,6 +1,6 @@
 # Dokumentasi API
 
-Dokumen ini adalah daftar endpoint yang direncanakan. Detail request/response final akan diperbarui setelah implementasi.
+Dokumen ini menjelaskan endpoint yang diimplementasikan pada backend Yii (`http://localhost:8081/api`) dan service Node (`http://localhost:3001/api`), beserta contoh request/response sesuai implementasi saat ini.
 
 ## Format response
 
@@ -182,7 +182,7 @@ Contoh body tindakan:
 }
 ```
 
-Saat tindakan dibuat, `visit_actions.price` dan `invoice_items.unit_price` menyimpan snapshot tarif saat itu. Perubahan harga master tindakan tidak mengubah tagihan lama.
+Saat tindakan dibuat, `visit_actions.price` dan `invoice_items.unit_price` menyimpan snapshot tarif saat itu. Perubahan harga master tindakan tidak mengubah tagihan/invoice dibuat sebelumnya.
 
 Contoh body order lab:
 

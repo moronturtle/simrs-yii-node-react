@@ -1,6 +1,6 @@
 # Panduan Demo
 
-Dokumen ini membantu menjalankan demo end-to-end dan menyiapkan screenshot untuk penilaian.
+Dokumen ini membantu menjalankan demo end-to-end dan menyiapkan screenshot.
 
 ## Persiapan
 
